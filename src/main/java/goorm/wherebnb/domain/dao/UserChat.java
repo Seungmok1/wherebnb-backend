@@ -3,13 +3,15 @@ package goorm.wherebnb.domain.dao;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class UserChat {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userConversationsId;
+    private Long userChatId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -21,9 +23,6 @@ public class UserChat {
     public UserChat(User user, Chat chat) {
         this.user = user;
         this.chat = chat;
-    }
-
-    public UserChat() {
     }
 
     //==연관관계 편의 메서드 ==//
