@@ -23,7 +23,7 @@ public class Chat {
 //    @JoinColumn(name = "user_id")
     private List<UserChat> userChats;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "conversations")
+    @OneToMany(mappedBy = "chat")
     private List<Message> messages = new ArrayList<>();
 
     @Builder
@@ -34,11 +34,11 @@ public class Chat {
     }
 
     //==연관관계 메서드==//
-    public void setUserConversations(UserChat uerChat) {
+    public void addUserChat(UserChat uerChat) {
         this.userChats.add(uerChat);
         uerChat.setChat(this);
     }
-    public void setMessages(Message message) {
+    public void addMessage(Message message) {
         this.messages.add(message);
         message.setChat(this);
     }

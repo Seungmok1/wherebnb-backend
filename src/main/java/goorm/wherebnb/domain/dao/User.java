@@ -47,10 +47,7 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<Payment> payments = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users")
-    private List<Chat> chats = new ArrayList<>();
-
-    @OneToMany( mappedBy = "users")
+    @OneToMany( mappedBy = "user")
 //    @JoinColumn(name = "conversation_id")
     private List<UserChat> userChats = new ArrayList<>();
 
