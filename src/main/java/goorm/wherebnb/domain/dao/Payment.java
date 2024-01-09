@@ -1,5 +1,6 @@
 package goorm.wherebnb.domain.dao;
 
+import goorm.wherebnb.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,12 +8,11 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-
 @Entity
 @Getter
 @NoArgsConstructor
 @Table(name = "payments")
-public class Payment {
+public class Payment extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
@@ -25,7 +25,8 @@ public class Payment {
     @Enumerated
     private PaymentStatus paymentStatus;
 
-    private LocalDateTime paymentCompletionTime;
+//    BaseTimeEntity 로 대체
+//    private LocalDateTime paymentCompletionTime;
 
     private String transactionId;
 
@@ -40,7 +41,6 @@ public class Payment {
         this.amount = amount;
         this.paymentMethod = paymentMethod;
         this.paymentStatus = PaymentStatus.결제완료;
-        this.paymentCompletionTime = LocalDateTime.now();
         this.transactionId = transactionId;
         this.user = user;
         this.booking = booking;

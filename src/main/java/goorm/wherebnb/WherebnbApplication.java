@@ -17,8 +17,4 @@ public class WherebnbApplication {
 		SpringApplication.run(WherebnbApplication.class, args);
 	}
 
-	@Bean
-	public AuditorAware<String> auditorProvider() {
-		return () -> Optional.of(UUID.randomUUID().toString());
-	}
 }

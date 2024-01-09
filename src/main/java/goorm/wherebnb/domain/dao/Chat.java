@@ -1,5 +1,6 @@
 package goorm.wherebnb.domain.dao;
 
+import goorm.wherebnb.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Table(name = "chats")
-public class Chat {
+public class Chat extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long charId;

@@ -22,7 +22,8 @@ public class Booking extends BaseTimeEntity {
 //    @JoinColumn(name = "property_id")
     private Property property;
 
-    private LocalDateTime createBookingTime;
+//    BaseTimeEntity 로 대체
+//    private LocalDateTime createBookingTime;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
 
@@ -36,7 +37,6 @@ public class Booking extends BaseTimeEntity {
     public Booking(Property property, LocalDate checkInDate,
                    LocalDate checkOutDate, Payment payment) {
         this.property = property;
-        this.createBookingTime = LocalDateTime.now();
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.bookingStatus = BookingStatus.이용전;

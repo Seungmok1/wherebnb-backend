@@ -21,7 +21,8 @@ public class Review extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    private LocalDateTime createReviewTime;
+//    BaseTimeEntity 로 대체
+//    private LocalDateTime createReviewTime;
 
     private float totalScore;
 
@@ -49,7 +50,6 @@ public class Review extends BaseTimeEntity {
         this.locationScore = locationScore;
         this.priceScore = priceScore;
         this.content = content;
-        this.createReviewTime = LocalDateTime.now();
         this.user = user;
     }
 
