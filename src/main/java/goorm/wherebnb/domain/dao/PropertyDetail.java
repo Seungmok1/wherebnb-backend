@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PropertyDetail {
 
-    private int standardPeople;
-
     private int maxPeople;
 
     private int bedroom;
@@ -21,8 +19,7 @@ public class PropertyDetail {
     private int bathroom;
 
     @Builder
-    public PropertyDetail(int standardPeople, int maxPeople, int bedroom, int bed, int bathroom) {
-        this.standardPeople = standardPeople;
+    public PropertyDetail(int maxPeople, int bedroom, int bed, int bathroom) {
         this.maxPeople = maxPeople;
         this.bedroom = bedroom;
         this.bed = bed;

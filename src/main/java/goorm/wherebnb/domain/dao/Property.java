@@ -39,8 +39,7 @@ public class Property extends BaseTimeEntity {
     @Embedded
     private Address address;
 
-    @Embedded
-    private Price price;
+    private int price;
 
     private boolean guestFavorite;
 
@@ -65,10 +64,11 @@ public class Property extends BaseTimeEntity {
     private List<Booking> bookings = new ArrayList<>();
 
     @Builder
-    public Property(User host, String propertyName, String propertyExplanation, PropertyDetail propertyDetail,
-                    Address address, Price price, List<String> photos, List<String> amenities, List<String> tags, List<String> languages) {
+    public Property(User host, String propertyName, PropertyType propertyType, String propertyExplanation, PropertyDetail propertyDetail,
+                    Address address, int price, List<String> photos, List<String> amenities, List<String> tags, List<String> languages) {
         this.host = host;
         this.propertyName = propertyName;
+        this.propertyType = propertyType;
         this.propertyExplanation = propertyExplanation;
         this.propertyDetail = propertyDetail;
         this.address = address;
