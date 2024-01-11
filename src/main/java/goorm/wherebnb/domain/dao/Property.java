@@ -20,6 +20,8 @@ public class Property extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long propertyId;
 
+    private boolean status;
+
     @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id")
     private User host;
@@ -51,9 +53,6 @@ public class Property extends BaseTimeEntity {
     @ElementCollection
     private List<String> amenities;
 
-    @ElementCollection
-    private List<String> tags;
-
     @OneToMany(mappedBy = "property")
     private List<Review> reviews = new ArrayList<>();
 
@@ -63,6 +62,7 @@ public class Property extends BaseTimeEntity {
     @Builder
     public Property(User host, String propertyName, PropertyType propertyType, String propertyExplanation, PropertyDetail propertyDetail,
                     Address address, int price, List<String> photos, List<String> amenities) {
+        status = true;
         this.host = host;
         this.propertyName = propertyName;
         this.propertyType = propertyType;
@@ -89,6 +89,43 @@ public class Property extends BaseTimeEntity {
     public void addBooking(Booking booking) {
         this.bookings.add(booking);
         booking.setProperty(this);
+    }
+
+    // 업데이트
+    public void updateStatus(boolean status) {
+        this.status = status;
+    }
+
+    public void updatePhotos(List<String> photos) {
+        this.photos = photos;
+    }
+
+    public void updatePropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
+
+    public void updatePropertyType(PropertyType propertyType) {
+        this.propertyType = propertyType;
+    }
+
+    public void updatePropertyDetail(PropertyDetail propertyDetail) {
+        this.propertyDetail = propertyDetail;
+    }
+
+    public void updatePropertyExplanation(String propertyExplanation) {
+        this.propertyExplanation = propertyExplanation;
+    }
+
+    public void updateAmenities(List<String> amenities) {
+        this.amenities = amenities;
+    }
+
+    public void updateAddress(Address address) {
+        this.address = address;
+    }
+
+    public void updatePrice(int price) {
+        this.price = price;
     }
 
 }
