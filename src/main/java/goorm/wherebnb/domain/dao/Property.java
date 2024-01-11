@@ -54,9 +54,6 @@ public class Property extends BaseTimeEntity {
     @ElementCollection
     private List<String> tags;
 
-    @ElementCollection
-    private List<String> languages;
-
     @OneToMany(mappedBy = "property")
     private List<Review> reviews = new ArrayList<>();
 
@@ -65,7 +62,7 @@ public class Property extends BaseTimeEntity {
 
     @Builder
     public Property(User host, String propertyName, PropertyType propertyType, String propertyExplanation, PropertyDetail propertyDetail,
-                    Address address, int price, List<String> photos, List<String> amenities, List<String> tags, List<String> languages) {
+                    Address address, int price, List<String> photos, List<String> amenities, List<String> tags) {
         this.host = host;
         this.propertyName = propertyName;
         this.propertyType = propertyType;
@@ -77,7 +74,6 @@ public class Property extends BaseTimeEntity {
         this.photos = photos;
         this.amenities = amenities;
         this.tags = tags;
-        this.languages = languages;
     }
 
     //== 연관관계 메서드 ==//
