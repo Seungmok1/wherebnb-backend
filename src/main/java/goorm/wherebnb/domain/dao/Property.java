@@ -62,7 +62,7 @@ public class Property extends BaseTimeEntity {
 
     @Builder
     public Property(User host, String propertyName, PropertyType propertyType, String propertyExplanation, PropertyDetail propertyDetail,
-                    Address address, int price, List<String> photos, List<String> amenities, List<String> tags) {
+                    Address address, int price, List<String> photos, List<String> amenities) {
         this.host = host;
         this.propertyName = propertyName;
         this.propertyType = propertyType;
@@ -73,7 +73,6 @@ public class Property extends BaseTimeEntity {
         this.guestFavorite = false;
         this.photos = photos;
         this.amenities = amenities;
-        this.tags = tags;
     }
 
     //== 연관관계 메서드 ==//

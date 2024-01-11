@@ -47,7 +47,8 @@ public class PropertyService {
                 .price(requestDto.getPrice())
                 .photos(requestDto.getPhotos())
                 .amenities(requestDto.getAmenities())
-                .tags(new ArrayList<>())
                 .build();
+
+        propertyRepository.save(property);
     }
 }
