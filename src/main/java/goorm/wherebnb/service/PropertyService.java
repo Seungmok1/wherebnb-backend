@@ -80,7 +80,7 @@ public class PropertyService {
             photo.transferTo(newFile);
 
             PropertyPhoto propertyPhoto = PropertyPhoto.builder()
-                    .uuid(uuid)
+//                    .uuid(uuid)
                     .property(property)
                     .originalName(originalName)
                     .savedName(savedName)

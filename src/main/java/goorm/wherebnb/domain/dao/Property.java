@@ -47,6 +47,9 @@ public class Property extends BaseTimeEntity {
     private int favoriteNum;
 
     @ElementCollection
+    private List<String> photos;
+
+    @ElementCollection
     private List<String> amenities;
 
     @OneToMany(mappedBy = "property")
@@ -57,7 +60,7 @@ public class Property extends BaseTimeEntity {
 
     @Builder
     public Property(User host, String propertyName, PropertyType propertyType, String propertyExplanation, PropertyDetail propertyDetail,
-                    Address address, int price, List<String> amenities) {
+                    Address address, int price, List<String> photos, List<String> amenities) {
         status = true;
         setHost(host);
         this.propertyName = propertyName;
@@ -68,6 +71,7 @@ public class Property extends BaseTimeEntity {
         this.price = price;
         this.guestFavorite = false;
         this.favoriteNum = 0;
+        this.photos = photos;
         this.amenities = amenities;
     }
 
@@ -81,12 +85,10 @@ public class Property extends BaseTimeEntity {
 
     public void addReview(Review review) {
         this.reviews.add(review);
-        review.setProperty(this);
     }
 
     public void addBooking(Booking booking) {
         this.bookings.add(booking);
-        booking.setProperty(this);
     }
 
     // 업데이트

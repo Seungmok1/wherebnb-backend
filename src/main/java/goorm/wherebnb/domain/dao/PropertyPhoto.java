@@ -1,9 +1,6 @@
 package goorm.wherebnb.domain.dao;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,8 +13,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PropertyPhoto {
 
-    @Id
-    private UUID uuid;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long uuid;
 
     @ManyToOne
     private Property property;
@@ -30,7 +27,7 @@ public class PropertyPhoto {
 
     @Builder
     public PropertyPhoto(UUID uuid, Property property, String originalName, String savedName, String path) {
-        this.uuid = uuid;
+//        this.uuid = uuid;
         this.property = property;
         this.originalName = originalName;
         this.savedName = savedName;
