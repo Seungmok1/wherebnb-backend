@@ -35,6 +35,8 @@ public class User extends BaseTimeEntity {
 
     private String emergencyNumber;
 
+    private String explanation;
+
     @Embedded
     private Address address;
 
@@ -58,25 +60,25 @@ public class User extends BaseTimeEntity {
     private List<Message> receivedMessages;
 
     @Builder
-    public User(String name, String email, String picture, String password, String phoneNumber, String emergencyNumber, Address address) {
+    public User(String name, String email, String picture, String password, String phoneNumber,
+                String explanation, String emergencyNumber, Address address) {
         this.name = name;
         this.email = email;
         this.picture = picture;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.emergencyNumber = emergencyNumber;
+        this.explanation = explanation;
         this.address = address;
     }
 
     //== 연관관계 메서드 ==//
     public void addProperty(Property property) {
         this.properties.add(property);
-        property.setHost(this);
     }
 
     public void addReview(Review review) {
         this.reviews.add(review);
-        review.setUser(this);
     }
 
     public void addPayment(Payment payment) {

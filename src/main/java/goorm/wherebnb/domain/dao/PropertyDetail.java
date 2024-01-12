@@ -10,9 +10,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PropertyDetail {
 
-    private int standardPeople;
-
     private int maxPeople;
+
+    private boolean selfCheckIn;
+
+    private boolean petAvailable;
+
+    private boolean smokeAvailable;
+
+    private int checkInTime; // 0 ~ 23
+
+    private int checkOutTime; // 0 ~ 23
 
     private int bedroom;
 
@@ -21,12 +29,16 @@ public class PropertyDetail {
     private int bathroom;
 
     @Builder
-    public PropertyDetail(int standardPeople, int maxPeople, int bedroom, int bed, int bathroom) {
-        this.standardPeople = standardPeople;
+    public PropertyDetail(int maxPeople, boolean selfCheckIn, boolean petAvailable, boolean smokeAvailable,
+                          int checkInTime, int checkOutTime, int bedroom, int bed, int bathroom) {
         this.maxPeople = maxPeople;
+        this.selfCheckIn = selfCheckIn;
+        this.petAvailable = petAvailable;
+        this.smokeAvailable = smokeAvailable;
+        this.checkInTime = checkInTime;
+        this.checkOutTime = checkOutTime;
         this.bedroom = bedroom;
         this.bed = bed;
         this.bathroom = bathroom;
     }
-
 }

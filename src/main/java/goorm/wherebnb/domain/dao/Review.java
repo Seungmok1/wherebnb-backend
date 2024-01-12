@@ -1,5 +1,6 @@
 package goorm.wherebnb.domain.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.wherebnb.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -21,46 +22,33 @@ public class Review extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-//    BaseTimeEntity 로 대체
-//    private LocalDateTime createReviewTime;
-
-    private float totalScore;
-
-    private int cleanScore;
-    private int communicationScore;
-    private int checkInScore;
-    private int accuracyScore;
-    private int locationScore;
-    private int priceScore;
+    @Embedded
+    private Score score;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Property property;
 
     @Builder
-    public Review(int cleanScore, int communicationScore, int checkInScore, int accuracyScore,
-                  int locationScore, int priceScore, String content,  User user) {
-        this.totalScore = (float) (cleanScore + communicationScore + checkInScore + accuracyScore + locationScore + priceScore) / 6;
-        this.cleanScore = cleanScore;
-        this.communicationScore = communicationScore;
-        this.checkInScore = checkInScore;
-        this.accuracyScore = accuracyScore;
-        this.locationScore = locationScore;
-        this.priceScore = priceScore;
+    public Review(User user, Property property, Score score, String content) {
+        setUser(user);
+        setProperty(property);
+        this.score = score;
         this.content = content;
-        this.user = user;
     }
 
     //== 연관관계 메서드 ==//
     public void setUser(User user) {
         this.user = user;
-        user.getReviews().add(this);
+        user.addReview(this);
     }
 
     public void setProperty(Property property) {
         this.property = property;
-        property.getReviews().add(this);
+        property.addReview(this);
     }
 }
