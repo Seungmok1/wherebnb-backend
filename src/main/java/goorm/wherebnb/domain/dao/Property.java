@@ -6,10 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -20,6 +17,7 @@ public class Property extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long propertyId;
 
+    @Column
     private boolean status;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,13 +39,10 @@ public class Property extends BaseTimeEntity {
     @Embedded
     private Address address;
 
+    @Column
     private int price;
 
     private boolean guestFavorite;
-
-//    @OneToMany(mappedBy = "property")
-    @ElementCollection
-    private List<String> photos;
 
 //    @OneToMany(mappedBy = "property")
     @ElementCollection
@@ -61,7 +56,7 @@ public class Property extends BaseTimeEntity {
 
     @Builder
     public Property(User host, String propertyName, PropertyType propertyType, String propertyExplanation, PropertyDetail propertyDetail,
-                    Address address, int price, List<String> photos, List<String> amenities) {
+                    Address address, int price, List<String> amenities) {
         status = true;
         this.host = host;
         this.propertyName = propertyName;
@@ -71,7 +66,6 @@ public class Property extends BaseTimeEntity {
         this.address = address;
         this.price = price;
         this.guestFavorite = false;
-        this.photos = photos;
         this.amenities = amenities;
     }
 
@@ -94,10 +88,6 @@ public class Property extends BaseTimeEntity {
     // 업데이트
     public void updateStatus(boolean status) {
         this.status = status;
-    }
-
-    public void updatePhotos(List<String> photos) {
-        this.photos = photos;
     }
 
     public void updatePropertyName(String propertyName) {

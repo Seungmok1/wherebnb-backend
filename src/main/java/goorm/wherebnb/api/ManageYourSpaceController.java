@@ -75,15 +75,15 @@ public class ManageYourSpaceController {
         }
     }
 
-    @PatchMapping("/{propertyId}/photos")
-    public ResponseEntity<?> updatePhotos(@PathVariable Long propertyId, @RequestBody List<String> photos) {
-        try {
-            propertyService.updatePhotos(propertyId, photos);
-            return ResponseEntity.ok("수정이 완료되었습니다.");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
-        }
-    }
+//    @PatchMapping("/{propertyId}/photos")
+//    public ResponseEntity<?> updatePhotos(@PathVariable Long propertyId, @RequestBody List<String> photos) {
+//        try {
+//            propertyService.updatePhotos(propertyId, photos);
+//            return ResponseEntity.ok("수정이 완료되었습니다.");
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+//        }
+//    }
 
     @PatchMapping("/{propertyId}/amenities")
     public ResponseEntity<?> updateAmenities(@PathVariable Long propertyId, @RequestBody List<String> amenities) {

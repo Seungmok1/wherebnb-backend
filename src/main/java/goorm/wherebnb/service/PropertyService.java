@@ -3,22 +3,28 @@ package goorm.wherebnb.service;
 import goorm.wherebnb.domain.dao.*;
 import goorm.wherebnb.domain.dto.request.BecomeAHostRequestDto;
 import goorm.wherebnb.domain.dto.response.ManageYourSpaceResponseDto;
+import goorm.wherebnb.repository.PropertyPhotoRepository;
 import goorm.wherebnb.repository.PropertyRepository;
 import goorm.wherebnb.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class PropertyService {
 
     private final PropertyRepository propertyRepository;
+    private final PropertyPhotoRepository propertyPhotoRepository;
     private final UserRepository userRepository;
 
-    public void createProperty(BecomeAHostRequestDto requestDto) {
-        User host = userRepository.findUserByUserId(requestDto.getUserId());
+    public void createProperty(BecomeAHostRequestDto requestDto, List<MultipartFile> photos) throws IOException {
+//        User host = userRepository.findUserByUserId(requestDto.getUserId());
         PropertyDetail detail = PropertyDetail.builder()
                 .maxPeople(requestDto.getMaxPeople())
                 .bedroom(requestDto.getBedroom())
@@ -28,6 +34,7 @@ public class PropertyService {
         Address address = Address.builder()
                 .country(requestDto.getCountry())
                 .state(requestDto.getState())
+                .city(requestDto.getCity())
                 .street(requestDto.getStreet())
                 .details(requestDto.getDetails())
                 .zipcode(requestDto.getZipcode())
@@ -36,25 +43,46 @@ public class PropertyService {
                 .build();
 
         Property property = Property.builder()
-                .host(host)
+                .host(null)
                 .propertyName(requestDto.getPropertyName())
                 .propertyType(requestDto.getPropertyType())
                 .propertyExplanation(requestDto.getPropertyExplanation())
                 .propertyDetail(detail)
                 .address(address)
                 .price(requestDto.getPrice())
-                .photos(requestDto.getPhotos())
                 .amenities(requestDto.getAmenities())
                 .build();
 
         propertyRepository.save(property);
+
+        String path = "/Users/goorm/Downloads/uploadFiles/";
+        for (MultipartFile photo : photos) {
+            String originalName = photo.getOriginalFilename();
+
+            UUID uuid = UUID.randomUUID();
+            String savedName = uuid.toString() + "_" + originalName;
+
+            File newFile = new File(path + savedName);
+            photo.transferTo(newFile);
+
+            PropertyPhoto propertyPhoto = PropertyPhoto.builder()
+                    .uuid(uuid)
+                    .property(property)
+                    .originalName(originalName)
+                    .savedName(savedName)
+                    .path(path)
+                    .build();
+
+            propertyPhotoRepository.save(propertyPhoto);
+        }
     }
 
     public ManageYourSpaceResponseDto getPropertyEditor(Long propertyId) {
         Property property = propertyRepository.getPropertyByPropertyId(propertyId);
+        List<PropertyPhoto> propertyPhoto = propertyPhotoRepository.getPropertyPhotosByProperty(property);
         return ManageYourSpaceResponseDto.builder()
                 .status(property.isStatus())
-                .photos(property.getPhotos())
+//                .photos(property.getPhotos())
                 .propertyName(property.getPropertyName())
                 .propertyType(property.getPropertyType())
                 .propertyDetail(property.getPropertyDetail())
@@ -72,11 +100,11 @@ public class PropertyService {
         this.propertyRepository.save(property);
     }
 
-    public void updatePhotos(Long propertyId, List<String> photos) {
-        Property property = propertyRepository.getPropertyByPropertyId(propertyId);
-        property.updatePhotos(photos);
-        this.propertyRepository.save(property);
-    }
+//    public void updatePhotos(Long propertyId, List<String> photos) {
+//        Property property = propertyRepository.getPropertyByPropertyId(propertyId);
+//        property.updatePhotos(photos);
+//        this.propertyRepository.save(property);
+//    }
 
     public void updatePropertyName(Long propertyId, String propertyName) {
         Property property = propertyRepository.getPropertyByPropertyId(propertyId);

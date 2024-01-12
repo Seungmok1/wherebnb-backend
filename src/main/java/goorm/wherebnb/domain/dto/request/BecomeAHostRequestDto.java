@@ -16,6 +16,7 @@ public class BecomeAHostRequestDto {
 
     private String country;
     private String state;
+    private String city;
     private String street;
     private String details;
     private String zipcode;
@@ -29,6 +30,5 @@ public class BecomeAHostRequestDto {
 
     private int price;
 
-    private List<String> photos;
     private List<String> amenities;
 }
