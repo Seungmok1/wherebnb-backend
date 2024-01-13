@@ -112,6 +112,10 @@ public class Property extends BaseTimeEntity {
         this.propertyExplanation = propertyExplanation;
     }
 
+    public void updatePhotos(List<String> photos) {
+        this.photos = photos;
+    }
+
     public void updateAmenities(List<String> amenities) {
         this.amenities = amenities;
     }
