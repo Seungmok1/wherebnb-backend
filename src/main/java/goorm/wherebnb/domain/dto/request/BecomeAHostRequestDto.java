@@ -24,6 +24,11 @@ public class BecomeAHostRequestDto {
     private Double longitude;
 
     private int maxPeople;
+    private boolean selfCheckIn;
+    private boolean petAvailable;
+    private boolean smokeAvailable;
+    private int checkInTime;
+    private int checkOutTime;
     private int bedroom;
     private int bed;
     private int bathroom;

@@ -43,12 +43,6 @@ public class PropertyService {
 
     public void createProperty(BecomeAHostRequestDto requestDto, List<MultipartFile> files) throws IOException {
         User host = userRepository.findUserByUserId(requestDto.getUserId());
-        PropertyDetail detail = PropertyDetail.builder()
-                .maxPeople(requestDto.getMaxPeople())
-                .bedroom(requestDto.getBedroom())
-                .bed(requestDto.getBed())
-                .bathroom(requestDto.getBathroom())
-                .build();
 
         Address address = Address.builder()
                 .country(requestDto.getCountry())
@@ -59,6 +53,18 @@ public class PropertyService {
                 .zipcode(requestDto.getZipcode())
                 .latitude(requestDto.getLatitude())
                 .longitude(requestDto.getLongitude())
+                .build();
+
+        PropertyDetail detail = PropertyDetail.builder()
+                .maxPeople(requestDto.getMaxPeople())
+                .selfCheckIn(requestDto.isSelfCheckIn())
+                .petAvailable(requestDto.isPetAvailable())
+                .smokeAvailable(requestDto.isSmokeAvailable())
+                .checkInTime(requestDto.getCheckInTime())
+                .checkOutTime(requestDto.getCheckOutTime())
+                .bedroom(requestDto.getBedroom())
+                .bed(requestDto.getBed())
+                .bathroom(requestDto.getBathroom())
                 .build();
 
         List<String> propertyPhotos = uploadS3(files);
