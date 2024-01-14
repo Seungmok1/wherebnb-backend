@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ManageYourSpaceResponseDto {
+public class HostingListingEditorResponse {
 
     private boolean status;
     private List<String> photos;
@@ -23,7 +23,7 @@ public class ManageYourSpaceResponseDto {
     private String hostName;
 
     @Builder
-    public ManageYourSpaceResponseDto(boolean status, List<String> photos, String propertyName, PropertyType propertyType, PropertyDetail propertyDetail, String propertyExplanation, List<String> amenities, Address address, String hostPicture, String hostName) {
+    public HostingListingEditorResponse(boolean status, List<String> photos, String propertyName, PropertyType propertyType, PropertyDetail propertyDetail, String propertyExplanation, List<String> amenities, Address address, String hostPicture, String hostName) {
         this.status = status;
         this.photos = photos;
         this.propertyName = propertyName;

@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
 
 import goorm.wherebnb.domain.dao.*;
 import goorm.wherebnb.domain.dto.request.BecomeAHostRequestDto;
-import goorm.wherebnb.domain.dto.response.ManageYourSpaceResponseDto;
+import goorm.wherebnb.domain.dto.response.HostingListingEditorResponse;
 import goorm.wherebnb.repository.UserRepository;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -122,9 +122,9 @@ public class PropertyService {
         return Optional.empty();
     }
 
-    public ManageYourSpaceResponseDto getPropertyEditor(Long propertyId) {
+    public HostingListingEditorResponse getPropertyEditor(Long propertyId) {
         Property property = propertyRepository.getPropertyByPropertyId(propertyId);
-        return ManageYourSpaceResponseDto.builder()
+        return HostingListingEditorResponse.builder()
                 .status(property.isStatus())
                 .photos(property.getPhotos())
                 .propertyName(property.getPropertyName())

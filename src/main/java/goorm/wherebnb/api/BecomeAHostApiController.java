@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/become-a-host")
-public class BecomeAHostController {
+public class BecomeAHostApiController {
 
     private final PropertyService propertyService;
 
