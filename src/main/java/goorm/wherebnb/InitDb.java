@@ -3,10 +3,12 @@ package goorm.wherebnb;
 
 import goorm.wherebnb.domain.dao.*;
 import goorm.wherebnb.repository.PropertyRepository;
+//import goorm.wherebnb.service.PropertyService;
 import goorm.wherebnb.service.PropertyService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,13 +34,14 @@ public class InitDb {
         private final EntityManager em;
         private final PropertyService propertyService;
         private  final PropertyRepository propertyRepository;
+        private final BCryptPasswordEncoder passwordEncoder;
 
         public void dbInit() throws IOException {
             User user = User.builder()
                     .name("John Doe")
                     .email("johndoe@example.com")
                     .picture("profilePic.jpg")
-                    .password("password123")
+                    .password(passwordEncoder.encode("password123"))
                     .phoneNumber("1234567890")
                     .emergencyNumber("0987654321")
                     .explanation("안녕 나는 조 도")

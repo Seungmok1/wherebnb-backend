@@ -1,11 +1,13 @@
 package goorm.wherebnb.domain.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import goorm.wherebnb.config.auth.user.oauth2.OAuth2UserInfo;
 import goorm.wherebnb.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,8 @@ public class User extends BaseTimeEntity {
 
     private String picture;
 
+    private String role;
+
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -36,6 +40,11 @@ public class User extends BaseTimeEntity {
     private String emergencyNumber;
 
     private String explanation;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    private String providerId;
 
     @Embedded
     private Address address;
@@ -60,15 +69,18 @@ public class User extends BaseTimeEntity {
     private List<Message> receivedMessages;
 
     @Builder
-    public User(String name, String email, String picture, String password, String phoneNumber,
-                String explanation, String emergencyNumber, Address address) {
+    public User(String name, String email, String picture, String role, String password, String phoneNumber,
+                String explanation, String emergencyNumber, AuthProvider provider, String providerId, Address address) {
         this.name = name;
         this.email = email;
         this.picture = picture;
+        this.role = role;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.emergencyNumber = emergencyNumber;
         this.explanation = explanation;
+        this.provider = provider;
+        this.providerId = providerId;
         this.address = address;
     }
 
@@ -103,5 +115,20 @@ public class User extends BaseTimeEntity {
         if (message.getRecipient() != this) {
             message.setRecipient(this);
         }
+    }
+    public static User createNewUser(AuthProvider provider, String providerId, String name, String email, String imageUrl, String role) {
+        return User.builder()
+                .provider(provider)
+                .providerId(providerId)
+                .name(name)
+                .email(email)
+                .picture(imageUrl)
+                .role(role)
+                .build();
+    }
+
+    public void updateUserWithOAuth2UserInfo(OAuth2UserInfo oAuth2UserInfo) {
+        this.name = oAuth2UserInfo.getName();
+        this.picture = oAuth2UserInfo.getImageUrl();
     }
 }
