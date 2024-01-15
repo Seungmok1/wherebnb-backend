@@ -32,7 +32,6 @@ public class ProgressService {
                 .orElse(null);
 
         if (reviews == null) {
-            System.out.println("null");
             return null;
         }
 
