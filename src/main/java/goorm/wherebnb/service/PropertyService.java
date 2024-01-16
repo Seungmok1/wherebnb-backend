@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
 
 import goorm.wherebnb.domain.dao.*;
 import goorm.wherebnb.domain.dto.request.BecomeAHostRequestDto;
-import goorm.wherebnb.domain.dto.response.ManageYourSpaceResponseDto;
+import goorm.wherebnb.domain.dto.response.HostingListingEditorResponse;
 import goorm.wherebnb.repository.UserRepository;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,12 +43,6 @@ public class PropertyService {
 
     public void createProperty(BecomeAHostRequestDto requestDto, List<MultipartFile> files) throws IOException {
         User host = userRepository.findUserByUserId(requestDto.getUserId());
-        PropertyDetail detail = PropertyDetail.builder()
-                .maxPeople(requestDto.getMaxPeople())
-                .bedroom(requestDto.getBedroom())
-                .bed(requestDto.getBed())
-                .bathroom(requestDto.getBathroom())
-                .build();
 
         Address address = Address.builder()
                 .country(requestDto.getCountry())
@@ -59,6 +53,18 @@ public class PropertyService {
                 .zipcode(requestDto.getZipcode())
                 .latitude(requestDto.getLatitude())
                 .longitude(requestDto.getLongitude())
+                .build();
+
+        PropertyDetail detail = PropertyDetail.builder()
+                .maxPeople(requestDto.getMaxPeople())
+                .selfCheckIn(requestDto.isSelfCheckIn())
+                .petAvailable(requestDto.isPetAvailable())
+                .smokeAvailable(requestDto.isSmokeAvailable())
+                .checkInTime(requestDto.getCheckInTime())
+                .checkOutTime(requestDto.getCheckOutTime())
+                .bedroom(requestDto.getBedroom())
+                .bed(requestDto.getBed())
+                .bathroom(requestDto.getBathroom())
                 .build();
 
         List<String> propertyPhotos = uploadS3(files);
@@ -116,9 +122,9 @@ public class PropertyService {
         return Optional.empty();
     }
 
-    public ManageYourSpaceResponseDto getPropertyEditor(Long propertyId) {
+    public HostingListingEditorResponse getPropertyEditor(Long propertyId) {
         Property property = propertyRepository.getPropertyByPropertyId(propertyId);
-        return ManageYourSpaceResponseDto.builder()
+        return HostingListingEditorResponse.builder()
                 .status(property.isStatus())
                 .photos(property.getPhotos())
                 .propertyName(property.getPropertyName())

@@ -3,7 +3,7 @@ package goorm.wherebnb.api;
 import goorm.wherebnb.domain.dao.Address;
 import goorm.wherebnb.domain.dao.PropertyDetail;
 import goorm.wherebnb.domain.dao.PropertyType;
-import goorm.wherebnb.domain.dto.response.ManageYourSpaceResponseDto;
+import goorm.wherebnb.domain.dto.response.HostingListingEditorResponse;
 import goorm.wherebnb.service.PropertyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,14 +16,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/manage-your-space")
-public class ManageYourSpaceController {
+@RequestMapping("/hosting/listing/editor")
+public class HostingListingEditorApiController {
 
     private final PropertyService propertyService;
 
     @GetMapping("/{propertyId}")
-    public ResponseEntity<?> manageYourSpace(@PathVariable Long propertyId) {
-        ManageYourSpaceResponseDto responseDto = propertyService.getPropertyEditor(propertyId);
+    public ResponseEntity<?> hostingListingEditor(@PathVariable Long propertyId) {
+        HostingListingEditorResponse responseDto = propertyService.getPropertyEditor(propertyId);
         return ResponseEntity.ok(responseDto);
     }
 
