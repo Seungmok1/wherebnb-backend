@@ -1,6 +1,5 @@
 package goorm.wherebnb.domain.dao;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.wherebnb.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -47,6 +45,9 @@ public class User extends BaseTimeEntity {
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    private List<Booking> bookings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
     private List<Payment> payments = new ArrayList<>();
 
     @OneToMany( mappedBy = "user")
@@ -79,6 +80,10 @@ public class User extends BaseTimeEntity {
 
     public void addReview(Review review) {
         this.reviews.add(review);
+    }
+
+    public void addBooking(Booking booking) {
+        this.bookings.add(booking);
     }
 
     public void addPayment(Payment payment) {

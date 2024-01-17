@@ -2,7 +2,10 @@ package goorm.wherebnb;
 
 
 import goorm.wherebnb.domain.dao.*;
+import goorm.wherebnb.domain.dto.request.BookingRequest;
+import goorm.wherebnb.domain.dto.request.PaymentRequest;
 import goorm.wherebnb.repository.PropertyRepository;
+import goorm.wherebnb.service.BookingService;
 import goorm.wherebnb.service.PropertyService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 @Component
@@ -31,7 +35,8 @@ public class InitDb {
 
         private final EntityManager em;
         private final PropertyService propertyService;
-        private  final PropertyRepository propertyRepository;
+        private final PropertyRepository propertyRepository;
+        private final BookingService bookingService;
 
         public void dbInit() throws IOException {
             User user = User.builder()
@@ -139,6 +144,72 @@ public class InitDb {
             em.persist(review1);
             em.persist(review2);
             em.persist(review3);
+
+            bookingService.createBooking(1L,
+                    BookingRequest.builder()
+                            .checkInDate(LocalDate.of(2024, 2, 21))
+                            .checkOutDate(LocalDate.of(2024, 2, 24))
+                            .numberOfAdults(2)
+                            .numberOfChildren(1)
+                            .numberOfInfants(1)
+                            .paymentRequest(PaymentRequest.builder()
+                                    .email(sampleUser.getEmail())
+                                    .paymentMethod(PaymentMethod.CARD)
+                                    .cardNumber("1234-1234-1234-1234")
+                                    .expirationMonth("02")
+                                    .expirationYear("28")
+                                    .cvc(123)
+                                    .totalPrice(1000000)
+                                    .nation("KOREA")
+                                    .build())
+                            .message("hello")
+                            .build()
+            );
+
+            bookingService.createBooking(1L,
+                    BookingRequest.builder()
+                            .checkInDate(LocalDate.of(2024, 2, 25))
+                            .checkOutDate(LocalDate.of(2024, 2, 27))
+                            .numberOfAdults(2)
+                            .numberOfChildren(1)
+                            .numberOfInfants(1)
+                            .paymentRequest(PaymentRequest.builder()
+                                    .email(sampleUser.getEmail())
+                                    .paymentMethod(PaymentMethod.CARD)
+                                    .cardNumber("1234-1234-1234-1234")
+                                    .expirationMonth("02")
+                                    .expirationYear("28")
+                                    .cvc(123)
+                                    .totalPrice(120000)
+                                    .nation("KOREA")
+                                    .build())
+                            .message("hello")
+                            .build()
+            );
+
+            bookingService.createBooking(1L,
+                    BookingRequest.builder()
+                            .checkInDate(LocalDate.of(2024, 2, 2))
+                            .checkOutDate(LocalDate.of(2024, 2, 10))
+                            .numberOfAdults(1)
+                            .numberOfChildren(1)
+                            .numberOfInfants(1)
+                            .paymentRequest(PaymentRequest.builder()
+                                    .email(sampleUser.getEmail())
+                                    .paymentMethod(PaymentMethod.CARD)
+                                    .cardNumber("1234-1234-1234-1234")
+                                    .expirationMonth("02")
+                                    .expirationYear("28")
+                                    .cvc(123)
+                                    .totalPrice(900000)
+                                    .nation("KOREA")
+                                    .build())
+                            .message("hello")
+                            .build()
+            );
+
         }
+
+
     }
 }

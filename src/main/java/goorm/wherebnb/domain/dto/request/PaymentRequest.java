@@ -11,29 +11,31 @@ public class PaymentRequest {
 
     private PaymentMethod paymentMethod;
 
+    private String email;
+
     private String cardNumber;
 
-    private String expireDay;
+    private String expirationMonth;
 
-    private int cvvNumber;
+    private String expirationYear;
 
-    private String zipcode;
+    private int cvc;
+
+    private int totalPrice;
 
     private String nation;
 
     @Builder
-    public PaymentRequest(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
 
-    @Builder
-    public PaymentRequest(PaymentMethod paymentMethod, String cardNumber, String expireDay,
-                          int cvvNumber, String zipcode, String nation) {
+    public PaymentRequest(PaymentMethod paymentMethod, String email, String cardNumber, String expirationMonth,
+                          String expirationYear, int cvc, int totalPrice, String nation) {
         this.paymentMethod = paymentMethod;
+        this.email = email;
         this.cardNumber = cardNumber;
-        this.expireDay = expireDay;
-        this.cvvNumber = cvvNumber;
-        this.zipcode = zipcode;
+        this.expirationMonth = expirationMonth;
+        this.expirationYear = expirationYear;
+        this.cvc = cvc;
+        this.totalPrice = totalPrice;
         this.nation = nation;
     }
 }

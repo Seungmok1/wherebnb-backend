@@ -17,18 +17,13 @@ public class Payment extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
 
-    private int amount;
+    private int totalPrice;
 
     @Enumerated
     private PaymentMethod paymentMethod;
 
     @Enumerated
     private PaymentStatus paymentStatus;
-
-//    BaseTimeEntity 로 대체
-//    private LocalDateTime paymentCompletionTime;
-
-    private String transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -37,11 +32,10 @@ public class Payment extends BaseTimeEntity {
     private Booking booking;
 
     @Builder
-    public Payment(int amount, PaymentMethod paymentMethod, String transactionId, User user, Booking booking) {
-        this.amount = amount;
+    public Payment(int totalPrice, PaymentMethod paymentMethod, User user, Booking booking) {
+        this.totalPrice = totalPrice;
         this.paymentMethod = paymentMethod;
-        this.paymentStatus = PaymentStatus.결제완료;
-        this.transactionId = transactionId;
+        this.paymentStatus = PaymentStatus.결제대기;
         this.user = user;
         this.booking = booking;
     }
@@ -54,8 +48,10 @@ public class Payment extends BaseTimeEntity {
 
     public void setBooking(Booking booking) {
         this.booking = booking;
-        if (booking.getPayment() != this) {
-            booking.setPayment(this);
-        }
+        booking.setPayment(this);
+    }
+
+    public void updatePaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }
