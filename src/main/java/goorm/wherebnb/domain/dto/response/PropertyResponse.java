@@ -32,12 +32,14 @@ public class PropertyResponse {
 
     private List<ReviewResponse> reviews;
 
+    private List<PropertyBookingListResponse> bookings;
+
     private Address address;
 
     private HostResponse host;
 
     @Builder
-    public PropertyResponse(Property property) {
+    public PropertyResponse(Property property, List<PropertyBookingListResponse> bookings) {
         List<Review> reviews = property.getReviews();
 
         this.propertyName = property.getPropertyName();
@@ -60,6 +62,7 @@ public class PropertyResponse {
         this.reviews = reviews.stream()
                 .map(ReviewResponse::new)
                 .collect(Collectors.toList());
+        this.bookings = bookings;
         this.address = property.getAddress();
         this.host = new HostResponse(property.getHost());
     }

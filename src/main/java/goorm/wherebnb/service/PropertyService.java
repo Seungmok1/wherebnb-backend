@@ -3,8 +3,11 @@ package goorm.wherebnb.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import goorm.wherebnb.domain.dto.response.PropertyBookingListResponse;
 import goorm.wherebnb.domain.dto.response.PropertyResponse;
+import goorm.wherebnb.repository.BookingRepository;
 import goorm.wherebnb.repository.PropertyRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +21,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -30,16 +36,26 @@ public class PropertyService {
     private final String bucket = "wherebnb-property-photos";
     private final AmazonS3 amazonS3;
     private final PropertyRepository propertyRepository;
+    private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
 
     public PropertyResponse getProperty(Long propertyId) {
-        Property property = propertyRepository.findByPropertyId(propertyId);
+        Property findProperty = propertyRepository.findByPropertyId(propertyId)
+                .orElseThrow(() -> new EntityNotFoundException("Property not found"));
+
+        List<PropertyBookingListResponse> bookings = bookingRepository.findByPropertyAndCheckOutDateAfter(findProperty, LocalDate.now()).stream()
+                .filter(booking -> !booking.getBookingStatus().equals(BookingStatus.예약실패))
+                .map(booking -> PropertyBookingListResponse.builder()
+                        .checkInDate(booking.getCheckInDate())
+                        .checkOutDate(booking.getCheckOutDate())
+                        .build())
+                .collect(Collectors.toList());
 
         return PropertyResponse.builder()
-                .property(property)
+                .property(findProperty)
+                .bookings(bookings)
                 .build();
     }
-
-    private final UserRepository userRepository;
 
     public void createProperty(BecomeAHostRequestDto requestDto, List<MultipartFile> files) throws IOException {
         User host = userRepository.findUserByUserId(requestDto.getUserId());
