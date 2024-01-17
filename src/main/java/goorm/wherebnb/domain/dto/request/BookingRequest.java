@@ -3,13 +3,15 @@ package goorm.wherebnb.domain.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Getter
+@NoArgsConstructor
 public class BookingRequest {
 
-    private Long propertyId;
+//    private String email;
 
     private LocalDate checkInDate;
 
@@ -20,22 +22,23 @@ public class BookingRequest {
     private int numberOfChildren;
     private int numberOfInfants;
 
-    private int price;
+//    private int totalPrice;
 
     private PaymentRequest paymentRequest;
 
     private String message;
 
     @Builder
-    public BookingRequest(LocalDate checkInDate, LocalDate checkOutDate, int numberOfGuest, int numberOfAdults, int numberOfChildren,
-                          int numberOfInfants, int price, PaymentRequest paymentRequest, String message) {
+    public BookingRequest(String email, LocalDate checkInDate, LocalDate checkOutDate, int numberOfAdults,
+                          int numberOfChildren, int numberOfInfants, int totalPrice, PaymentRequest paymentRequest, String message) {
+//        this.email = email;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-        this.numberOfGuest = numberOfGuest;
+        this.numberOfGuest = numberOfAdults + numberOfChildren;
         this.numberOfAdults = numberOfAdults;
         this.numberOfChildren = numberOfChildren;
         this.numberOfInfants = numberOfInfants;
-        this.price = price;
+//        this.totalPrice = totalPrice;
         this.paymentRequest = paymentRequest;
         this.message = message;
     }
