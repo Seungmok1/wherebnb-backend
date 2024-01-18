@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -17,6 +16,9 @@ public class Booking extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "property_id")
@@ -33,27 +35,36 @@ public class Booking extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.LAZY)
     private Payment payment;
 
+    private int numberOfGuest;
+
     @Builder
-    public Booking(Property property, LocalDate checkInDate,
-                   LocalDate checkOutDate, Payment payment) {
+    public Booking(User user, Property property, LocalDate checkInDate,
+                   LocalDate checkOutDate, Payment payment, int numberOfGuest) {
+        this.user = user;
         this.property = property;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.bookingStatus = BookingStatus.이용전;
         this.payment = payment;
+        this.numberOfGuest = numberOfGuest;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+        user.addBooking(this);
     }
 
     public void setProperty(Property property) {
         this.property = property;
-        property.getBookings().add(this);
+        property.addBooking(this);
     }
 
     public void setPayment(Payment payment) {
         this.payment = payment;
-        if (payment.getBooking() != this) {
-            payment.setBooking(this);
-        }
+    }
+
+    public void updateBookingStatus(BookingStatus bookingStatus) {
+        this.bookingStatus = bookingStatus;
     }
 
 }

@@ -1,50 +1,65 @@
 package goorm.wherebnb.service;
 
-import goorm.wherebnb.domain.dto.response.HostResponse;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import goorm.wherebnb.domain.dto.response.PropertyBookingListResponse;
 import goorm.wherebnb.domain.dto.response.PropertyResponse;
+import goorm.wherebnb.repository.BookingRepository;
 import goorm.wherebnb.repository.PropertyRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+
+import java.io.FileOutputStream;
+
 import goorm.wherebnb.domain.dao.*;
 import goorm.wherebnb.domain.dto.request.BecomeAHostRequestDto;
-import goorm.wherebnb.domain.dto.response.ManageYourSpaceResponseDto;
-import goorm.wherebnb.repository.PropertyPhotoRepository;
+import goorm.wherebnb.domain.dto.response.HostingListingEditorResponse;
 import goorm.wherebnb.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class PropertyService {
 
+    private final String bucket = "wherebnb-property-photos";
+    private final AmazonS3 amazonS3;
     private final PropertyRepository propertyRepository;
+    private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
 
     public PropertyResponse getProperty(Long propertyId) {
-        Property property = propertyRepository.findByPropertyId(propertyId);
+        Property findProperty = propertyRepository.findByPropertyId(propertyId)
+                .orElseThrow(() -> new EntityNotFoundException("Property not found"));
+
+        List<PropertyBookingListResponse> bookings = bookingRepository.findByPropertyAndCheckOutDateAfter(findProperty, LocalDate.now()).stream()
+                .filter(booking -> !booking.getBookingStatus().equals(BookingStatus.예약실패))
+                .map(booking -> PropertyBookingListResponse.builder()
+                        .checkInDate(booking.getCheckInDate())
+                        .checkOutDate(booking.getCheckOutDate())
+                        .build())
+                .collect(Collectors.toList());
 
         return PropertyResponse.builder()
-                .property(property)
+                .property(findProperty)
+                .bookings(bookings)
                 .build();
     }
 
-    private final PropertyPhotoRepository propertyPhotoRepository;
-    private final UserRepository userRepository;
+    public void createProperty(BecomeAHostRequestDto requestDto, List<MultipartFile> files) throws IOException {
+        User host = userRepository.findUserByUserId(requestDto.getUserId());
 
-    public void createProperty(BecomeAHostRequestDto requestDto, List<MultipartFile> photos) throws IOException {
-//        User host = userRepository.findUserByUserId(requestDto.getUserId());
-        PropertyDetail detail = PropertyDetail.builder()
-                .maxPeople(requestDto.getMaxPeople())
-                .bedroom(requestDto.getBedroom())
-                .bed(requestDto.getBed())
-                .bathroom(requestDto.getBathroom())
-                .build();
         Address address = Address.builder()
                 .country(requestDto.getCountry())
                 .state(requestDto.getState())
@@ -56,47 +71,78 @@ public class PropertyService {
                 .longitude(requestDto.getLongitude())
                 .build();
 
+        PropertyDetail detail = PropertyDetail.builder()
+                .maxPeople(requestDto.getMaxPeople())
+                .selfCheckIn(requestDto.isSelfCheckIn())
+                .petAvailable(requestDto.isPetAvailable())
+                .smokeAvailable(requestDto.isSmokeAvailable())
+                .checkInTime(requestDto.getCheckInTime())
+                .checkOutTime(requestDto.getCheckOutTime())
+                .bedroom(requestDto.getBedroom())
+                .bed(requestDto.getBed())
+                .bathroom(requestDto.getBathroom())
+                .build();
+
+        List<String> propertyPhotos = uploadS3(files);
+
         Property property = Property.builder()
-                .host(null)
+                .host(host)
                 .propertyName(requestDto.getPropertyName())
                 .propertyType(requestDto.getPropertyType())
                 .propertyExplanation(requestDto.getPropertyExplanation())
                 .propertyDetail(detail)
                 .address(address)
                 .price(requestDto.getPrice())
+                .photos(propertyPhotos)
                 .amenities(requestDto.getAmenities())
                 .build();
 
         propertyRepository.save(property);
-
-        String path = "/Users/goorm/Downloads/uploadFiles/";
-        for (MultipartFile photo : photos) {
-            String originalName = photo.getOriginalFilename();
-
-            UUID uuid = UUID.randomUUID();
-            String savedName = uuid.toString() + "_" + originalName;
-
-            File newFile = new File(path + savedName);
-            photo.transferTo(newFile);
-
-            PropertyPhoto propertyPhoto = PropertyPhoto.builder()
-//                    .uuid(uuid)
-                    .property(property)
-                    .originalName(originalName)
-                    .savedName(savedName)
-                    .path(path)
-                    .build();
-
-            propertyPhotoRepository.save(propertyPhoto);
-        }
     }
 
-    public ManageYourSpaceResponseDto getPropertyEditor(Long propertyId) {
+    private List<String> uploadS3(List<MultipartFile> files) throws IOException {
+        List<String> propertyPhotos = new ArrayList<>();
+        for (MultipartFile multipartFile : files) {
+            File file = convertMultipartFileToFile(multipartFile)
+                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> file convert fail"));
+
+            String key = "property-photos/" + UUID.randomUUID();
+
+            try {
+                amazonS3.putObject(new PutObjectRequest(bucket, key, file)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+            } catch (Exception e) {
+                throw e;
+            } finally {
+                file.delete();
+            }
+
+            propertyPhotos.add(getS3(key));
+        }
+        return propertyPhotos;
+    }
+
+    private String getS3(String key) {
+        return amazonS3.getUrl(bucket, key).toString();
+    }
+
+    public Optional<File> convertMultipartFileToFile(MultipartFile multipartFile) throws IOException {
+        File file = new File(System.getProperty("user.dir") + "/" + multipartFile.getOriginalFilename());
+
+        if (file.createNewFile()) {
+            try (FileOutputStream fos = new FileOutputStream(file)){
+                fos.write(multipartFile.getBytes());
+            }
+            return Optional.of(file);
+        }
+        return Optional.empty();
+    }
+
+    public HostingListingEditorResponse getPropertyEditor(Long propertyId) {
         Property property = propertyRepository.getPropertyByPropertyId(propertyId);
-        List<PropertyPhoto> propertyPhoto = propertyPhotoRepository.getPropertyPhotosByProperty(property);
-        return ManageYourSpaceResponseDto.builder()
+        return HostingListingEditorResponse.builder()
                 .status(property.isStatus())
-//                .photos(property.getPhotos())
+                .photos(property.getPhotos())
                 .propertyName(property.getPropertyName())
                 .propertyType(property.getPropertyType())
                 .propertyDetail(property.getPropertyDetail())
@@ -114,11 +160,28 @@ public class PropertyService {
         this.propertyRepository.save(property);
     }
 
-//    public void updatePhotos(Long propertyId, List<String> photos) {
-//        Property property = propertyRepository.getPropertyByPropertyId(propertyId);
-//        property.updatePhotos(photos);
-//        this.propertyRepository.save(property);
-//    }
+    public void updatePhotos(Long propertyId, List<MultipartFile> files) throws IOException {
+        Property property = propertyRepository.getPropertyByPropertyId(propertyId);
+        deletePhotos(property);
+
+        List<String> photos = uploadS3(files);
+        property.updatePhotos(photos);
+        this.propertyRepository.save(property);
+    }
+
+    public void deletePhotos(Property property) {
+        for (String photo : property.getPhotos()) {
+            String[] arr = photo.split("/");
+            for (String st : arr) {
+                System.out.println(st);
+            }
+            String key = arr[arr.length - 2] + "/" + arr[arr.length - 1];
+            System.out.println("key"+key);
+            if (amazonS3.doesObjectExist(bucket, key)) {
+                amazonS3.deleteObject(bucket, key);
+            }
+        }
+    }
 
     public void updatePropertyName(Long propertyId, String propertyName) {
         Property property = propertyRepository.getPropertyByPropertyId(propertyId);
