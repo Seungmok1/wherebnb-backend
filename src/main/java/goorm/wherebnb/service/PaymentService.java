@@ -18,15 +18,13 @@ public class PaymentService {
     private final UserRepository userRepository;
 
 
-    public Payment createPayment(PaymentRequest paymentRequest) {
-
-        User findUser = userRepository.findByEmail(paymentRequest.getEmail())
-                .orElseThrow(() -> new EntityNotFoundException("User not found."));
+    public Payment createPayment(PaymentRequest paymentRequest, User user) {
 
         Payment newPayment = Payment.builder()
+                .email(paymentRequest.getEmail())
                 .totalPrice(paymentRequest.getTotalPrice())
                 .paymentMethod(paymentRequest.getPaymentMethod())
-                .user(findUser)
+                .user(user)
                 .build();
 
         paymentRepository.save(newPayment);

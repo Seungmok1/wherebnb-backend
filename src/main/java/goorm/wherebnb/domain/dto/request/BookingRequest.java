@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class BookingRequest {
 
-//    private String email;
+    private Long userId;
 
     private LocalDate checkInDate;
 
@@ -29,16 +29,15 @@ public class BookingRequest {
     private String message;
 
     @Builder
-    public BookingRequest(String email, LocalDate checkInDate, LocalDate checkOutDate, int numberOfAdults,
-                          int numberOfChildren, int numberOfInfants, int totalPrice, PaymentRequest paymentRequest, String message) {
-//        this.email = email;
+    public BookingRequest(Long userId, LocalDate checkInDate, LocalDate checkOutDate, int numberOfAdults,
+                          int numberOfChildren, int numberOfInfants, PaymentRequest paymentRequest, String message) {
+        this.userId = userId;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.numberOfGuest = numberOfAdults + numberOfChildren;
         this.numberOfAdults = numberOfAdults;
         this.numberOfChildren = numberOfChildren;
         this.numberOfInfants = numberOfInfants;
-//        this.totalPrice = totalPrice;
         this.paymentRequest = paymentRequest;
         this.message = message;
     }

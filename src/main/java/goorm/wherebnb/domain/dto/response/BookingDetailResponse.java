@@ -12,6 +12,8 @@ import java.util.List;
 @Getter
 public class BookingDetailResponse {
 
+    private Long bookingId;
+
     private String hostName;
     private String hostPhoto;
     private String hostPhoneNumber;
@@ -35,6 +37,7 @@ public class BookingDetailResponse {
     @Builder
     public BookingDetailResponse(Booking booking) {
         Property property = booking.getProperty();
+        this.bookingId = booking.getBookingId();
         this.hostName = property.getHost().getName();
         this.hostPhoto = property.getHost().getPicture();
         this.hostPhoneNumber = property.getHost().getPhoneNumber();

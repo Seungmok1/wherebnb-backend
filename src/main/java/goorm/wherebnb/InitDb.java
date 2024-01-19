@@ -147,6 +147,7 @@ public class InitDb {
 
             bookingService.createBooking(1L,
                     BookingRequest.builder()
+                            .userId(1L)
                             .checkInDate(LocalDate.of(2024, 2, 21))
                             .checkOutDate(LocalDate.of(2024, 2, 24))
                             .numberOfAdults(2)
@@ -168,6 +169,7 @@ public class InitDb {
 
             bookingService.createBooking(1L,
                     BookingRequest.builder()
+                            .userId(2L)
                             .checkInDate(LocalDate.of(2024, 2, 25))
                             .checkOutDate(LocalDate.of(2024, 2, 27))
                             .numberOfAdults(2)
@@ -189,6 +191,7 @@ public class InitDb {
 
             bookingService.createBooking(1L,
                     BookingRequest.builder()
+                            .userId(2L)
                             .checkInDate(LocalDate.of(2024, 2, 2))
                             .checkOutDate(LocalDate.of(2024, 2, 10))
                             .numberOfAdults(1)

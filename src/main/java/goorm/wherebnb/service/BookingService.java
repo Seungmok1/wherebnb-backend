@@ -48,15 +48,15 @@ public class BookingService {
 
     public Booking createBooking(Long propertyId, BookingRequest bookingRequest) {
 
-//        User findUser = userRepository.findByEmail(bookingRequest.getEmail())
-//                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User findUser = userRepository.findByUserId(bookingRequest.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Property findProperty = propertyRepository.findByPropertyId(propertyId)
                 .orElseThrow(() -> new EntityNotFoundException("Property not found"));
 
-        Payment newPayment = paymentService.createPayment(bookingRequest.getPaymentRequest());
+        Payment newPayment = paymentService.createPayment(bookingRequest.getPaymentRequest(), findUser);
 
         Booking newBooking = Booking.builder()
-                .user(newPayment.getUser())
+                .user(findUser)
                 .property(findProperty)
                 .checkInDate(bookingRequest.getCheckInDate())
                 .checkOutDate(bookingRequest.getCheckOutDate())
