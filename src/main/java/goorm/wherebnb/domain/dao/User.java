@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 
 import java.util.ArrayList;
@@ -41,6 +42,9 @@ public class User extends BaseTimeEntity {
 
     private String explanation;
 
+    @Setter
+    private String refreshToken;
+
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 
@@ -49,28 +53,39 @@ public class User extends BaseTimeEntity {
     @Embedded
     private Address address;
 
+    @JsonIgnore
+    @ElementCollection
+    private List<Long> wishList;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "host")
     private List<Property> properties = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Payment> payments = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany( mappedBy = "user")
 //    @JoinColumn(name = "conversation_id")
     private List<UserChat> userChats = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "sender")
     private List<Message> sentMessages;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "recipient")
     private List<Message> receivedMessages;
 
+
     @Builder
     public User(String name, String email, String picture, String role, String password, String phoneNumber,
-                String explanation, String emergencyNumber, AuthProvider provider, String providerId, Address address) {
+                String explanation, String refreshToken, String emergencyNumber, AuthProvider provider, String providerId, Address address, List<Long> wishList) {
         this.name = name;
         this.email = email;
         this.picture = picture;
@@ -79,9 +94,11 @@ public class User extends BaseTimeEntity {
         this.phoneNumber = phoneNumber;
         this.emergencyNumber = emergencyNumber;
         this.explanation = explanation;
+        this.refreshToken = refreshToken;
         this.provider = provider;
         this.providerId = providerId;
         this.address = address;
+        this.wishList = wishList;
     }
 
     //== 연관관계 메서드 ==//

@@ -37,6 +37,14 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public String createRefreshToken(Authentication authentication) {
+
+        return Jwts.builder()
+                .expiration(new Date(new Date().getTime() + JwtProperties.REFRESH_TOKEN_EXPIRATION_TIME))
+                .signWith(SECRET_KEY)
+                .compact();
+    }
+
     public Claims getClaims(String token) {
         return Jwts.parser()
                 .verifyWith(SECRET_KEY)
@@ -78,4 +86,16 @@ public class JwtTokenProvider {
         }
     }
 
+    public String generateAccessTokenFromRefreshToken(String refreshToken) {
+        Optional<User> optionalUser = userRepository.findAllByRefreshToken(refreshToken);
+        User user = optionalUser.orElseThrow(() -> new NotFoundException("유저가 없는디"));
+
+        return Jwts.builder()
+                .subject(user.getEmail())
+                .claim("roles", user.getRole())
+                .expiration(new Date(new Date().getTime() + JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME))
+                .signWith(SECRET_KEY)
+                .compact();
+
+    }
 }
