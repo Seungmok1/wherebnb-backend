@@ -4,6 +4,7 @@ import goorm.wherebnb.domain.dao.*;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -60,6 +61,10 @@ public class PropertyResponse {
                 "priceScore", roundToOneDecimal(reviews.stream().mapToDouble(r -> r.getScore().getPriceScore()).average().orElse(0))
         );
         this.reviews = reviews.stream()
+                .sorted(Comparator.comparing(Review::getCreateDate). reversed())
+                .limit(6)
+                .toList()
+                .stream()
                 .map(ReviewResponse::new)
                 .collect(Collectors.toList());
         this.bookings = bookings;

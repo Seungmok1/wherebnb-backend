@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Getter
 public class ReviewResponse {
 
+    private Long reviewId;
+
     private String photo;
 
     private String userName;
@@ -24,6 +26,7 @@ public class ReviewResponse {
 
     @Builder
     public ReviewResponse(Review review) {
+        this.reviewId = review.getReviewId();
         this.photo = review.getUser().getPicture();
         this.userName = review.getUser().getName();
         this.nation = review.getUser().getAddress().getCountry();
