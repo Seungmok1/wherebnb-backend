@@ -38,6 +38,9 @@ public class User extends BaseTimeEntity {
     @Embedded
     private Address address;
 
+    @ElementCollection
+    private List<Long> wishList;
+
     @OneToMany(mappedBy = "host")
     private List<Property> properties = new ArrayList<>();
 

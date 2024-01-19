@@ -1,5 +1,6 @@
 package goorm.wherebnb.domain.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.wherebnb.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -18,12 +19,15 @@ public class Message extends BaseTimeEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User recipient;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
 //    @JoinColumn(name = "chat_id")
     private Chat chat;
 
