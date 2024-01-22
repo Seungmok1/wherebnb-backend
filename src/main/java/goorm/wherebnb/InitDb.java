@@ -39,7 +39,6 @@ public class InitDb {
         private final PropertyService propertyService;
         private final PropertyRepository propertyRepository;
         private final BookingService bookingService;
-        private  final PropertyRepository propertyRepository;
         private final BCryptPasswordEncoder passwordEncoder;
 
         public void dbInit() throws IOException {
