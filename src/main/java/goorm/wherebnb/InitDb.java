@@ -6,10 +6,12 @@ import goorm.wherebnb.domain.dto.request.BookingRequest;
 import goorm.wherebnb.domain.dto.request.PaymentRequest;
 import goorm.wherebnb.repository.PropertyRepository;
 import goorm.wherebnb.service.BookingService;
+//import goorm.wherebnb.service.PropertyService;
 import goorm.wherebnb.service.PropertyService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,13 +39,16 @@ public class InitDb {
         private final PropertyService propertyService;
         private final PropertyRepository propertyRepository;
         private final BookingService bookingService;
+        private  final PropertyRepository propertyRepository;
+        private final BCryptPasswordEncoder passwordEncoder;
 
         public void dbInit() throws IOException {
             User user = User.builder()
                     .name("John Doe")
                     .email("johndoe@example.com")
                     .picture("profilePic.jpg")
-                    .password("password123")
+                    .password(passwordEncoder.encode("password123"))
+                    .role("USER")
                     .phoneNumber("1234567890")
                     .emergencyNumber("0987654321")
                     .explanation("안녕 나는 조 도")
@@ -54,7 +59,7 @@ public class InitDb {
                     .name("홍길동")
                     .email("honggildong@example.com")
                     .picture("profilePic.jpg")
-                    .password("password123")
+                    .password(passwordEncoder.encode("password123"))
                     .phoneNumber("01012345678")
                     .emergencyNumber("01087654321")
                     .explanation("안녕 나는 홍길동")
@@ -147,6 +152,7 @@ public class InitDb {
 
             bookingService.createBooking(1L,
                     BookingRequest.builder()
+                            .userId(1L)
                             .checkInDate(LocalDate.of(2024, 2, 21))
                             .checkOutDate(LocalDate.of(2024, 2, 24))
                             .numberOfAdults(2)
@@ -168,6 +174,7 @@ public class InitDb {
 
             bookingService.createBooking(1L,
                     BookingRequest.builder()
+                            .userId(2L)
                             .checkInDate(LocalDate.of(2024, 2, 25))
                             .checkOutDate(LocalDate.of(2024, 2, 27))
                             .numberOfAdults(2)
@@ -189,6 +196,7 @@ public class InitDb {
 
             bookingService.createBooking(1L,
                     BookingRequest.builder()
+                            .userId(2L)
                             .checkInDate(LocalDate.of(2024, 2, 2))
                             .checkOutDate(LocalDate.of(2024, 2, 10))
                             .numberOfAdults(1)
