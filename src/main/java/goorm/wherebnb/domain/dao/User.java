@@ -109,6 +109,21 @@ public class User extends BaseTimeEntity {
         this.bookings.add(booking);
     }
 
+    public void addWishList(Long propertyId) {
+        if (wishList == null) {
+            wishList = new ArrayList<>();
+        }
+        if (!wishList.contains(propertyId)) {
+            wishList.add(propertyId);
+        }
+    }
+
+    public void removeWishList(Long propertyId) {
+        if (wishList != null) {
+            wishList.remove(propertyId);
+        }
+    }
+
     public void addPayment(Payment payment) {
         this.payments.add(payment);
         payment.setUser(this);
