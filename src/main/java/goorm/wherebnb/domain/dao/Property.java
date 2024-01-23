@@ -49,6 +49,9 @@ public class Property extends BaseTimeEntity {
     @ElementCollection
     private List<String> photos;
 
+    @Enumerated
+    private Amenity amenity;
+
     @ElementCollection
     private List<String> amenities;
 
@@ -60,7 +63,7 @@ public class Property extends BaseTimeEntity {
 
     @Builder
     public Property(User host, String propertyName, PropertyType propertyType, String propertyExplanation, PropertyDetail propertyDetail,
-                    Address address, int price, List<String> photos, List<String> amenities) {
+                    Address address, int price, List<String> photos, List<String> amenities, Amenity amenity) {
         status = true;
         setHost(host);
         this.propertyName = propertyName;
@@ -73,6 +76,7 @@ public class Property extends BaseTimeEntity {
         this.favoriteNum = 0;
         this.photos = photos;
         this.amenities = amenities;
+        this.amenity = amenity;
     }
 
 
