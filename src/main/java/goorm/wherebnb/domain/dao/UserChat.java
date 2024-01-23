@@ -1,5 +1,6 @@
 package goorm.wherebnb.domain.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +15,11 @@ public class UserChat {
     private Long userChatId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Chat chat;
 
     @Builder

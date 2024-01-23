@@ -6,8 +6,8 @@ import goorm.wherebnb.domain.dao.BookingStatus;
 import goorm.wherebnb.domain.dto.request.BookingRequest;
 import goorm.wherebnb.domain.dto.response.BookingDetailResponse;
 import goorm.wherebnb.domain.dto.response.BookingSimpleResponse;
-import goorm.wherebnb.repository.UserRepository;
 import goorm.wherebnb.service.BookingService;
+import goorm.wherebnb.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserApiController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final BookingService bookingService;
 
     @GetMapping("/{userId}/bookings")
@@ -43,5 +43,22 @@ public class UserApiController {
             return ResponseEntity.status(HttpStatus.CREATED).body("예약에 실패했습니다. 결제처리 중 문제가 발생했습니다.");
         }
 
+    }
+
+    @GetMapping("/{userId}/wishlist")
+    public ResponseEntity<List<Long>> getWishList(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(userService.getWishList(userId));
+    }
+
+    @PostMapping("/{userId}/wishlist/{propertyId}")
+    public ResponseEntity<List<Long>> addWishList(@PathVariable("userId") Long userId,
+                                                  @PathVariable("propertyId") Long propertyId) {
+        return ResponseEntity.ok(userService.addWishList(userId, propertyId));
+    }
+
+    @DeleteMapping("/{userId}/wishlist/{propertyId}")
+    public ResponseEntity<List<Long>> deleteWishList(@PathVariable("userId") Long userId,
+                                                  @PathVariable("propertyId") Long propertyId) {
+        return ResponseEntity.ok(userService.removeWishList(userId, propertyId));
     }
 }

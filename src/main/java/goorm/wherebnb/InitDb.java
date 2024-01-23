@@ -6,10 +6,12 @@ import goorm.wherebnb.domain.dto.request.BookingRequest;
 import goorm.wherebnb.domain.dto.request.PaymentRequest;
 import goorm.wherebnb.repository.PropertyRepository;
 import goorm.wherebnb.service.BookingService;
+//import goorm.wherebnb.service.PropertyService;
 import goorm.wherebnb.service.PropertyService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,13 +39,15 @@ public class InitDb {
         private final PropertyService propertyService;
         private final PropertyRepository propertyRepository;
         private final BookingService bookingService;
+        private final BCryptPasswordEncoder passwordEncoder;
 
         public void dbInit() throws IOException {
             User user = User.builder()
                     .name("John Doe")
                     .email("johndoe@example.com")
                     .picture("profilePic.jpg")
-                    .password("password123")
+                    .password(passwordEncoder.encode("password123"))
+                    .role("USER")
                     .phoneNumber("1234567890")
                     .emergencyNumber("0987654321")
                     .explanation("안녕 나는 조 도")
@@ -54,7 +58,7 @@ public class InitDb {
                     .name("홍길동")
                     .email("honggildong@example.com")
                     .picture("profilePic.jpg")
-                    .password("password123")
+                    .password(passwordEncoder.encode("password123"))
                     .phoneNumber("01012345678")
                     .emergencyNumber("01087654321")
                     .explanation("안녕 나는 홍길동")
@@ -94,6 +98,41 @@ public class InitDb {
                     .price(100)
                     .photos(Arrays.asList("photo1.jpg", "photo2.jpg"))
                     .amenities(Arrays.asList("WiFi", "TV", "Air Conditioning"))
+                    .build();
+
+            Address propertyAddress2 = Address.builder()
+                    .country("대한민국")
+                    .state("서울특별시")
+                    .city("강남")
+                    .street("길거리")
+                    .details("비싼 집")
+                    .zipcode("234456")
+                    .latitude(20.0)
+                    .longitude(30.0)
+                    .build();
+
+            PropertyDetail propertyDetail2 = PropertyDetail.builder()
+                    .maxPeople(4)
+                    .selfCheckIn(true)
+                    .petAvailable(false)
+                    .smokeAvailable(false)
+                    .checkInTime(14)
+                    .checkOutTime(11)
+                    .bedroom(2)
+                    .bed(3)
+                    .bathroom(1)
+                    .build();
+
+            Property property2 = Property.builder()
+                    .host(user)
+                    .propertyName("비싼 집")
+                    .propertyType(PropertyType.주택)
+                    .propertyExplanation("외관은 별로지만 내부는 엄청난 비싼 집")
+                    .propertyDetail(propertyDetail2)
+                    .address(propertyAddress2)
+                    .price(200000)
+                    .photos(Arrays.asList("photo1.jpg", "photo2.jpg"))
+                    .amenities(Arrays.asList("WiFi", "TV", "에어컨", "세탁기"))
                     .build();
 
             Review review1 = Review.builder()
@@ -138,15 +177,92 @@ public class InitDb {
                     .content("완벽한 숙소! 모든 것이 기대 이상이었습니다.")
                     .build();
 
+            Review review4 = Review.builder()
+                    .user(sampleUser)
+                    .property(property)
+                    .score(Score.builder()
+                            .cleanScore(2)
+                            .communicationScore(3)
+                            .checkInScore(5)
+                            .accuracyScore(5)
+                            .locationScore(4)
+                            .priceScore(5)
+                            .build())
+                    .content("리뷰 네번째")
+                    .build();
+
+            Review review5 = Review.builder()
+                    .user(sampleUser)
+                    .property(property)
+                    .score(Score.builder()
+                            .cleanScore(4)
+                            .communicationScore(3)
+                            .checkInScore(2)
+                            .accuracyScore(5)
+                            .locationScore(4)
+                            .priceScore(5)
+                            .build())
+                    .content("리뷰 다섯번쨰")
+                    .build();
+
+            Review review6 = Review.builder()
+                    .user(sampleUser)
+                    .property(property)
+                    .score(Score.builder()
+                            .cleanScore(4)
+                            .communicationScore(3)
+                            .checkInScore(2)
+                            .accuracyScore(5)
+                            .locationScore(4)
+                            .priceScore(5)
+                            .build())
+                    .content("리뷰 6번쨰")
+                    .build();
+
+            Review review7 = Review.builder()
+                    .user(sampleUser)
+                    .property(property)
+                    .score(Score.builder()
+                            .cleanScore(4)
+                            .communicationScore(3)
+                            .checkInScore(2)
+                            .accuracyScore(5)
+                            .locationScore(4)
+                            .priceScore(5)
+                            .build())
+                    .content("리뷰 7번쨰")
+                    .build();
+
+            Review review8 = Review.builder()
+                    .user(sampleUser)
+                    .property(property)
+                    .score(Score.builder()
+                            .cleanScore(4)
+                            .communicationScore(3)
+                            .checkInScore(2)
+                            .accuracyScore(5)
+                            .locationScore(4)
+                            .priceScore(5)
+                            .build())
+                    .content("리뷰 8번쨰")
+                    .build();
+
             em.persist(user);
             em.persist(sampleUser);
             em.persist(property);
+            em.persist(property2);
             em.persist(review1);
             em.persist(review2);
             em.persist(review3);
+            em.persist(review4);
+            em.persist(review5);
+            em.persist(review6);
+            em.persist(review7);
+            em.persist(review8);
 
             bookingService.createBooking(1L,
                     BookingRequest.builder()
+                            .userId(1L)
                             .checkInDate(LocalDate.of(2024, 2, 21))
                             .checkOutDate(LocalDate.of(2024, 2, 24))
                             .numberOfAdults(2)
@@ -168,6 +284,7 @@ public class InitDb {
 
             bookingService.createBooking(1L,
                     BookingRequest.builder()
+                            .userId(2L)
                             .checkInDate(LocalDate.of(2024, 2, 25))
                             .checkOutDate(LocalDate.of(2024, 2, 27))
                             .numberOfAdults(2)
@@ -189,6 +306,7 @@ public class InitDb {
 
             bookingService.createBooking(1L,
                     BookingRequest.builder()
+                            .userId(2L)
                             .checkInDate(LocalDate.of(2024, 2, 2))
                             .checkOutDate(LocalDate.of(2024, 2, 10))
                             .numberOfAdults(1)

@@ -1,5 +1,6 @@
 package goorm.wherebnb.domain.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import goorm.wherebnb.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -18,10 +19,11 @@ public class Booking extends BaseTimeEntity {
     private Long bookingId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "property_id")
+    @JsonIgnore
     private Property property;
 
 //    BaseTimeEntity 로 대체
@@ -32,7 +34,9 @@ public class Booking extends BaseTimeEntity {
     @Enumerated
     private BookingStatus bookingStatus;
 
-    @OneToOne(fetch = FetchType.LAZY)
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JsonIgnore
+    @OneToOne
     private Payment payment;
 
     private int numberOfGuest;
