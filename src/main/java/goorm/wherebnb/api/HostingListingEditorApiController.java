@@ -1,6 +1,7 @@
 package goorm.wherebnb.api;
 
 import goorm.wherebnb.domain.dao.Address;
+import goorm.wherebnb.domain.dao.Amenity;
 import goorm.wherebnb.domain.dao.PropertyDetail;
 import goorm.wherebnb.domain.dao.PropertyType;
 import goorm.wherebnb.domain.dto.response.HostingListingEditorResponse;
@@ -88,7 +89,7 @@ public class HostingListingEditorApiController {
     }
 
     @PatchMapping("/{propertyId}/amenities")
-    public ResponseEntity<?> updateAmenities(@PathVariable Long propertyId, @RequestBody List<String> amenities) {
+    public ResponseEntity<?> updateAmenities(@PathVariable Long propertyId, @RequestBody List<Amenity> amenities) {
         try {
             propertyService.updateAmenities(propertyId, amenities);
             return ResponseEntity.ok("수정이 완료되었습니다.");

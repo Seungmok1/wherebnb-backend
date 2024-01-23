@@ -207,7 +207,7 @@ public class PropertyService {
         this.propertyRepository.save(property);
     }
 
-    public void updateAmenities(Long propertyId, List<String> amenities) {
+    public void updateAmenities(Long propertyId, List<Amenity> amenities) {
         Property property = propertyRepository.getPropertyByPropertyId(propertyId);
         property.updateAmenities(amenities);
         this.propertyRepository.save(property);

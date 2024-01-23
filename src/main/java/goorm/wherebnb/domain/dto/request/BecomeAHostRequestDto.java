@@ -1,5 +1,7 @@
 package goorm.wherebnb.domain.dto.request;
 
+import goorm.wherebnb.domain.dao.Amenity;
+import goorm.wherebnb.domain.dao.Category;
 import goorm.wherebnb.domain.dao.PropertyType;
 import lombok.Getter;
 
@@ -35,5 +37,8 @@ public class BecomeAHostRequestDto {
 
     private int price;
 
-    private List<String> amenities;
+    private Category category;
+
+    //    private List<String> amenities;
+    private List<Amenity> amenities;
 }
