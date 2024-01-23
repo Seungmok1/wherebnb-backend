@@ -50,10 +50,13 @@ public class Property extends BaseTimeEntity {
     private List<String> photos;
 
     @Enumerated
-    private Amenity amenity;
+    private List<Amenity> amenities;
 
-    @ElementCollection
-    private List<String> amenities;
+    @Enumerated
+    private Category category;
+
+//    @ElementCollection
+//    private List<String> amenities;
 
     @OneToMany(mappedBy = "property")
     private List<Review> reviews = new ArrayList<>();
@@ -63,7 +66,7 @@ public class Property extends BaseTimeEntity {
 
     @Builder
     public Property(User host, String propertyName, PropertyType propertyType, String propertyExplanation, PropertyDetail propertyDetail,
-                    Address address, int price, List<String> photos, List<String> amenities, Amenity amenity) {
+                    Address address, int price, List<String> photos, List<Amenity> amenities, Category category) {
         status = true;
         setHost(host);
         this.propertyName = propertyName;
@@ -76,7 +79,7 @@ public class Property extends BaseTimeEntity {
         this.favoriteNum = 0;
         this.photos = photos;
         this.amenities = amenities;
-        this.amenity = amenity;
+        this.category = category;
     }
 
 
@@ -120,7 +123,7 @@ public class Property extends BaseTimeEntity {
         this.photos = photos;
     }
 
-    public void updateAmenities(List<String> amenities) {
+    public void updateAmenities(List<Amenity> amenities) {
         this.amenities = amenities;
     }
 

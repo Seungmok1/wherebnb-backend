@@ -95,6 +95,7 @@ public class PropertyService {
                 .price(requestDto.getPrice())
                 .photos(propertyPhotos)
                 .amenities(requestDto.getAmenities())
+                .category(requestDto.getCategory())
                 .build();
 
         propertyRepository.save(property);
@@ -102,11 +103,11 @@ public class PropertyService {
 
     private List<String> uploadS3(List<MultipartFile> files) throws IOException {
         List<String> propertyPhotos = new ArrayList<>();
-        for (MultipartFile multipartFile : files) {
-            File file = convertMultipartFileToFile(multipartFile)
-                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> file convert fail"));
-
-            String key = "property-photos/" + UUID.randomUUID();
+//        for (MultipartFile multipartFile : files) {
+//            File file = convertMultipartFileToFile(multipartFile)
+//                    .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> file convert fail"));
+//
+//            String key = "property-photos/" + UUID.randomUUID();
 
 //            try {
 //                amazonS3.putObject(new PutObjectRequest(bucket, key, file)
@@ -118,7 +119,7 @@ public class PropertyService {
 //            }
 
 //            propertyPhotos.add(getS3(key));
-        }
+//        }
         return propertyPhotos;
     }
 //
@@ -151,6 +152,7 @@ public class PropertyService {
                 .address(property.getAddress())
                 .hostPicture(property.getHost().getPicture())
                 .hostName(property.getHost().getName())
+                .category(property.getCategory())
                 .build();
     }
 
@@ -207,7 +209,7 @@ public class PropertyService {
         this.propertyRepository.save(property);
     }
 
-    public void updateAmenities(Long propertyId, List<String> amenities) {
+    public void updateAmenities(Long propertyId, List<Amenity> amenities) {
         Property property = propertyRepository.getPropertyByPropertyId(propertyId);
         property.updateAmenities(amenities);
         this.propertyRepository.save(property);

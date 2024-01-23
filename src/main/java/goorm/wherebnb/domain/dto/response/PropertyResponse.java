@@ -25,7 +25,7 @@ public class PropertyResponse {
 
     private int price;
 
-    private List<String> amenities;
+    private List<Amenity> amenities;
 
     private boolean guestFavorite;
 

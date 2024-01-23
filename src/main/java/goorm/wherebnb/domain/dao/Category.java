@@ -23,7 +23,7 @@ public enum Category {
     mansion(17),
     grandPiano(18),
     dessert(19),
-    nationlPark(20),
+    nationPark(20),
     container(21),
     extraSmall(22),
     treehouse(23),

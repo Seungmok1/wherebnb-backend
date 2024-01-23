@@ -97,7 +97,7 @@ public class InitDb {
                     .address(propertyAddress)
                     .price(100)
                     .photos(Arrays.asList("photo1.jpg", "photo2.jpg"))
-                    .amenities(Arrays.asList("WiFi", "TV", "Air Conditioning"))
+                    .amenities(Arrays.asList(Amenity.TV, Amenity.DRYER))
                     .build();
 
             Address propertyAddress2 = Address.builder()
@@ -132,7 +132,7 @@ public class InitDb {
                     .address(propertyAddress2)
                     .price(200000)
                     .photos(Arrays.asList("photo1.jpg", "photo2.jpg"))
-                    .amenities(Arrays.asList("WiFi", "TV", "에어컨", "세탁기"))
+                    .amenities(Arrays.asList(Amenity.TV))
                     .build();
 
             Review review1 = Review.builder()
