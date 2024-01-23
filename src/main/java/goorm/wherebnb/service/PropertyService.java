@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 public class PropertyService {
 
     private final String bucket = "wherebnb-property-photos";
-//    private final AmazonS3 amazonS3;
+    private final AmazonS3 amazonS3;
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
@@ -108,23 +108,23 @@ public class PropertyService {
 
             String key = "property-photos/" + UUID.randomUUID();
 
-//            try {
-//                amazonS3.putObject(new PutObjectRequest(bucket, key, file)
-//                        .withCannedAcl(CannedAccessControlList.PublicRead));
-//            } catch (Exception e) {
-//                throw e;
-//            } finally {
-//                file.delete();
-//            }
+            try {
+                amazonS3.putObject(new PutObjectRequest(bucket, key, file)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+            } catch (Exception e) {
+                throw e;
+            } finally {
+                file.delete();
+            }
 
-//            propertyPhotos.add(getS3(key));
+            propertyPhotos.add(getS3(key));
         }
         return propertyPhotos;
     }
-//
-//    private String getS3(String key) {
-//        return amazonS3.getUrl(bucket, key).toString();
-//    }
+
+    private String getS3(String key) {
+        return amazonS3.getUrl(bucket, key).toString();
+    }
 
     public Optional<File> convertMultipartFileToFile(MultipartFile multipartFile) throws IOException {
         File file = new File(System.getProperty("user.dir") + "/" + multipartFile.getOriginalFilename());
