@@ -132,7 +132,7 @@ public class InitDb {
                     .address(propertyAddress2)
                     .price(200000)
                     .photos(Arrays.asList("photo1.jpg", "photo2.jpg"))
-                    .amenities(Arrays.asList(Amenity.TV))
+                    .amenities(Arrays.asList(Amenity.TV, Amenity.IRON, Amenity.HAIR_DRYER, Amenity.WASHER))
                     .build();
 
             Review review1 = Review.builder()

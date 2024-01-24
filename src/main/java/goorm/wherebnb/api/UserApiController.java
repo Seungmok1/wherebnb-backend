@@ -3,11 +3,15 @@ package goorm.wherebnb.api;
 
 import goorm.wherebnb.domain.dao.Booking;
 import goorm.wherebnb.domain.dao.BookingStatus;
+import goorm.wherebnb.domain.dao.Property;
 import goorm.wherebnb.domain.dto.request.BookingRequest;
 import goorm.wherebnb.domain.dto.response.BookingDetailResponse;
 import goorm.wherebnb.domain.dto.response.BookingSimpleResponse;
+import goorm.wherebnb.domain.dto.response.PaymentPageResponse;
+import goorm.wherebnb.repository.PropertyRepository;
 import goorm.wherebnb.service.BookingService;
 import goorm.wherebnb.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,7 @@ public class UserApiController {
 
     private final UserService userService;
     private final BookingService bookingService;
+    private final PropertyRepository propertyRepository;
 
     @GetMapping("/{userId}/bookings")
     public ResponseEntity<List<BookingSimpleResponse>> getAllBookings(@PathVariable("userId") Long userId) {
@@ -43,6 +48,17 @@ public class UserApiController {
             return ResponseEntity.status(HttpStatus.CREATED).body("예약에 실패했습니다. 결제처리 중 문제가 발생했습니다.");
         }
 
+    }
+
+    @GetMapping("/rooms/booking/{propertyId}")
+    public ResponseEntity<PaymentPageResponse> getPaymentPage(@PathVariable("propertyId") Long propertyId) {
+
+        Property findProperty = propertyRepository.findByPropertyId(propertyId)
+                .orElseThrow(() -> new EntityNotFoundException("Property Not Found"));
+
+        return ResponseEntity.ok(PaymentPageResponse.builder()
+                .property(findProperty)
+                .build());
     }
 
     @GetMapping("/{userId}/wishlist")
