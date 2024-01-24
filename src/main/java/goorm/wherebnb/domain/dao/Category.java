@@ -30,6 +30,7 @@ public enum Category {
     surfing(24),
     cabin(25),
     nearLake(26);
+
     private int value;
 
     Category(int value) {

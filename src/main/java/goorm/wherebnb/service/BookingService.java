@@ -13,6 +13,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +56,15 @@ public class BookingService {
                 .orElseThrow(() -> new EntityNotFoundException("Property not found"));
 
         Payment newPayment = paymentService.createPayment(bookingRequest.getPaymentRequest(), findUser);
+        List<BookingDetail> bookingDetailList = new ArrayList<>();
+
+        for (LocalDate date = bookingRequest.getCheckInDate(); date.isBefore(bookingRequest.getCheckOutDate().plusDays(1)); date = date.plusDays(1)) {
+            BookingDetail bookingDetail = BookingDetail.builder()
+                    .detailDate(date)
+                    .bookingStatus(BookingStatus.예약)
+                    .build();
+            bookingDetailList.add(bookingDetail);
+        }
 
         Booking newBooking = Booking.builder()
                 .user(findUser)
@@ -62,6 +73,7 @@ public class BookingService {
                 .checkOutDate(bookingRequest.getCheckOutDate())
                 .payment(newPayment)
                 .numberOfGuest(bookingRequest.getNumberOfGuest())
+                .bookingDetailList(bookingDetailList)
                 .build();
 
         newPayment.setBooking(newBooking);

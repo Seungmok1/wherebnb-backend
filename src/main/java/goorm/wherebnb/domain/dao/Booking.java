@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,7 +27,7 @@ public class Booking extends BaseTimeEntity {
     @JsonIgnore
     private Property property;
 
-//    BaseTimeEntity 로 대체
+    //    BaseTimeEntity 로 대체
 //    private LocalDateTime createBookingTime;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
@@ -34,16 +35,20 @@ public class Booking extends BaseTimeEntity {
     @Enumerated
     private BookingStatus bookingStatus;
 
-//    @OneToOne(fetch = FetchType.LAZY)
+    //    @OneToOne(fetch = FetchType.LAZY)
 //    @JsonIgnore
     @OneToOne
     private Payment payment;
 
     private int numberOfGuest;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id")
+    private List<BookingDetail> bookingDetailList;
+
     @Builder
     public Booking(User user, Property property, LocalDate checkInDate,
-                   LocalDate checkOutDate, Payment payment, int numberOfGuest) {
+                   LocalDate checkOutDate, Payment payment, int numberOfGuest, List<BookingDetail> bookingDetailList) {
         this.user = user;
         this.property = property;
         this.checkInDate = checkInDate;
@@ -51,6 +56,7 @@ public class Booking extends BaseTimeEntity {
         this.bookingStatus = BookingStatus.이용전;
         this.payment = payment;
         this.numberOfGuest = numberOfGuest;
+        this.bookingDetailList = bookingDetailList;
     }
 
     public void setUser(User user) {
