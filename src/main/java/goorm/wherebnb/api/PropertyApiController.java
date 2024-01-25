@@ -44,8 +44,12 @@ public class PropertyApiController {
             @RequestParam(value = "property_type", required = false) Integer property_type,
             @RequestParam(value = "category", required = false) Integer category,
             @RequestParam(value = "amenity", required = false) List<Integer> amenity) {
-        List<PropertySearchResponse> responses = propertyService.propertySearch(checkInDate, checkOutDate);
-        List<PropertySearchResponse> searchResponses = propertyService.propertySearch2(responses, place, adult, children, infants, pets, price_min, price_max, min_bedrooms, min_beds, min_bathrooms, guest_favorite, property_type, category, amenity);
+            List<PropertySearchResponse> searchResponses = propertyService.unifiedPropertySearch(
+                checkInDate, checkOutDate, place, adult, children, infants, pets,
+                price_min, price_max, min_bedrooms, min_beds, min_bathrooms,
+                guest_favorite, property_type, category, amenity
+            );
+
         return ResponseEntity.ok(searchResponses);
     }
 
