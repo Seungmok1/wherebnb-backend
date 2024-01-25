@@ -22,4 +22,13 @@ public enum Amenity {
         this.amenityId = amenityId;
         this.amenityName = amenityName;
     }
+
+    public static Amenity fromId(int id){
+        for(Amenity amenity : Amenity.values()) {
+            if(amenity.getAmenityId() == id) {
+                return amenity;
+            }
+        }
+        throw new IllegalArgumentException("Invalid Amenity ID: " + id);
+    }
 }

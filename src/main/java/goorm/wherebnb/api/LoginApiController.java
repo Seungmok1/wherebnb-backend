@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginApiController {
     private final UserRepository userRepository;
 
-    @GetMapping("/")
-    public String start() {
-        System.out.println("hello");
-        return "/에 접속하였습니다.";
-    }
+//    @GetMapping("/")
+//    public String start() {
+//        System.out.println("hello");
+//        return "/에 접속하였습니다.";
+//    }
 
     @GetMapping("/hosting/12")
     public String start12() {
