@@ -244,7 +244,6 @@ public class InitDb {
                     .address(propertyAddress2)
                     .price(200000)
                     .category(Category.container)
-
                     .photos(Arrays.asList("photo1.jpg", "photo2.jpg"))
                     .amenities(Arrays.asList(Amenity.TV, Amenity.WIFI))
                     .build();
@@ -257,7 +256,8 @@ public class InitDb {
                     .details("Cottage")
                     .zipcode("567890")
                     .latitude(35.0)
-                    .longitude(40.0)
+                    .longitude(40.0
+                    .amenities(Arrays.asList(Amenity.TV, Amenity.IRON, Amenity.HAIR_DRYER, Amenity.WASHER))
                     .build();
 
             PropertyDetail cottageDetail = PropertyDetail.builder()
