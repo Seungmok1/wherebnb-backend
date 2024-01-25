@@ -8,6 +8,7 @@ import goorm.wherebnb.domain.dto.response.*;
 import goorm.wherebnb.repository.BookingRepository;
 import goorm.wherebnb.repository.PropertyRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import goorm.wherebnb.domain.dao.*;
 import goorm.wherebnb.domain.dto.request.BecomeAHostRequestDto;
 import goorm.wherebnb.repository.UserRepository;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +60,10 @@ public class PropertyService {
                 .build();
     }
 
-    public void createProperty(BecomeAHostRequestDto requestDto, List<MultipartFile> files) throws IOException {
+    public void createProperty(BecomeAHostRequestDto requestDto, HttpServletRequest request) throws IOException {
+        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+        List<MultipartFile> files = multipartHttpServletRequest.getFiles("photo");
+
         User host = userRepository.findUserByUserId(requestDto.getUserId());
 
         Address address = Address.builder()
