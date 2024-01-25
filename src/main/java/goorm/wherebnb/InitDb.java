@@ -256,9 +256,9 @@ public class InitDb {
                     .details("Cottage")
                     .zipcode("567890")
                     .latitude(35.0)
-                    .longitude(40.0
-                    .amenities(Arrays.asList(Amenity.TV, Amenity.IRON, Amenity.HAIR_DRYER, Amenity.WASHER))
+                    .longitude(40.0)
                     .build();
+
 
             PropertyDetail cottageDetail = PropertyDetail.builder()
                     .maxPeople(5)

@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
@@ -231,160 +232,11 @@ public class PropertyService {
         this.propertyRepository.save(property);
     }
 
-
-//    public List<PropertySearchResponse> propertySearch(LocalDate checkInDate, LocalDate checkOutDate) {
-//
-//        if(checkInDate==null && checkOutDate==null) {
-//            List<Property> all = propertyRepository.findAll();
-//
-//            List<PropertySearchResponse> result = all.stream()
-//                    .map(property -> {
-//                        int reviewCount = property.getReviews().size();
-//                        double totalScore = property.getReviews().stream()
-//                                .map(Review::getScore)
-//                                .mapToDouble(Score::getTotalScore)
-//                                .average()
-//                                .orElse(0.0);
-//                        SearchUserDto searchUserDto = SearchUserDto.builder()
-//                                .userId(property.getPropertyId())
-//                                .picture(property.getHost().getPicture())
-//                                .explanation(property.getHost().getExplanation())
-//                                .userName(property.getHost().getName())
-//                                .build();
-//
-//                        return PropertySearchResponse.builder()
-//                                .propertyId(property.getPropertyId())
-//                                .photos(property.getPhotos())
-//                                .address(property.getAddress())
-//                                .searchUser(searchUserDto)
-//                                .price(property.getPrice())
-//                                .totalScore(totalScore)
-//                                .reviews(reviewCount)
-//                                .propertyExplanation(property.getPropertyExplanation())
-//                                .guestFavorite(property.isGuestFavorite())
-//                                .build();
-//                    })
-//                    .toList();
-//
-//            return result;
-//        }
-//        List<LocalDate> days = new ArrayList<>();
-//
-//        for (LocalDate date = checkInDate; date.isBefore(checkOutDate.plusDays(1)); date = date.plusDays(1)) {
-//            days.add(date);
-//        }
-//        List<Property> availableProperties = propertyRepository.getAvailableProperties(days);
-//
-//        List<PropertySearchResponse> responses = availableProperties.stream()
-//                .map(property -> {
-//                    int reviewCount = property.getReviews().size();
-//                    double totalScore = property.getReviews().stream()
-//                            .map(Review::getScore)
-//                            .mapToDouble(Score::getTotalScore)
-//                            .average()
-//                            .orElse(0.0);
-//                    SearchUserDto searchUserDto = SearchUserDto.builder()
-//                            .userId(property.getPropertyId())
-//                            .picture(property.getHost().getPicture())
-//                            .explanation(property.getHost().getExplanation())
-//                            .userName(property.getHost().getName())
-//                            .build();
-//
-//
-//                    return PropertySearchResponse.builder()
-//                            .propertyId(property.getPropertyId())
-//                            .photos(property.getPhotos())
-//                            .address(property.getAddress())
-//                            .searchUser(searchUserDto)
-//                            .price(property.getPrice())
-//                            .totalScore(totalScore)
-//                            .reviews(reviewCount)
-//                            .propertyExplanation(property.getPropertyExplanation())
-//                            .guestFavorite(property.isGuestFavorite())
-//                            .build();
-//                })
-//                .collect(Collectors.toList());
-//
-//        return responses;
-//    }
-//
-//public List<PropertySearchResponse> propertySearch2(
-//        List<PropertySearchResponse> responses, String place, Integer adult, Integer children, Integer infants, Integer pets,
-//        Integer price_min, Integer price_max, Integer min_bedrooms, Integer min_beds, Integer min_bathrooms,
-//        Boolean guest_favorite, Integer property_type, Integer category, List<Integer> amenity) {
-//
-//    // 기본값 설정
-//    adult = adult == null ? 0 : adult;
-//    children = children == null ? 0 : children;
-//    infants = infants == null ? 0 : infants;
-//    pets = pets == null ? 0 : pets;
-//    price_min = price_min == null ? 0 : price_min;
-//    price_max = price_max == null ? 1000000 : price_max;
-//    min_bedrooms = min_bedrooms == null ? 0 : min_bedrooms;
-//    min_beds = min_beds == null ? 0 : min_beds;
-//    min_bathrooms = min_bathrooms == null ? 0 : min_bathrooms;
-//
-//        Integer finalAdult = adult;
-//        Integer finalChildren = children;
-//        Integer finalInfants = infants;
-//        Integer finalPets = pets;
-//        Integer finalMinPrice = price_min;
-//        Integer finalMaxPrice = price_max;
-//        Integer finalBedrooms = min_bedrooms;
-//        Integer finalBeds = min_beds;
-//        Integer finalBathrooms = min_bathrooms;
-//
-//    // 편의 시설 리스트 초기화
-//    List<Amenity> requiredAmenities = (amenity != null) ?
-//            amenity.stream().map(Amenity::fromId).collect(Collectors.toList()) :
-//            new ArrayList<>();
-//
-//    // 스트림을 사용하여 필터링 적용
-//    Stream<PropertySearchResponse> stream = responses.stream();
-//
-//    // 장소 필터링 적용
-//    if (place != null && !place.isEmpty()) {
-//        stream = stream.filter(r -> {
-//            Address address = r.getAddress();
-//            return address.getCity().contains(place) || address.getState().contains(place) ||
-//                    address.getCountry().contains(place) || address.getStreet().contains(place) ||
-//                    address.getDetails().contains(place);
-//        });
-//    }
-//
-//    // 다른 필터링 조건들 적용
-//    stream = stream.filter(r -> {
-//        Property findProperty = propertyRepository.findByPropertyId(r.getPropertyId())
-//                .orElseThrow(() -> new EntityNotFoundException("Property not found"));
-//        PropertyDetail detail = findProperty.getPropertyDetail();
-//        Category categories = findProperty.getCategory();
-//        PropertyType propertyType = findProperty.getPropertyType();
-//
-//
-//
-//        boolean matchesPeople = detail.getMaxPeople() >= (finalAdult + finalChildren + finalInfants);
-//        boolean matchesPets = finalPets <= 0 || detail.isPetAvailable();
-//        boolean matchesBedrooms = detail.getBedroom() >= finalBedrooms;
-//        boolean matchesBeds = detail.getBed() >= finalBeds;
-//        boolean matchesBathrooms = detail.getBathroom() >= finalBathrooms;
-//        boolean matchesGuestFavorite = (guest_favorite == null) || r.isGuestFavorite();
-//        boolean matchesPropertyType = (property_type == null) || propertyType.ordinal() == property_type;
-//        boolean withinPriceRange = r.getPrice() >= finalMinPrice && r.getPrice() <= finalMaxPrice;
-//        boolean matchesCategory = (category == null) || (categories != null && categories.ordinal() == category);
-//        boolean matchesAmenity = (amenity == null) || findProperty.getAmenities().containsAll(requiredAmenities);
-//
-//        return matchesPeople && matchesPets && matchesBedrooms && matchesBeds && matchesBathrooms &&
-//                withinPriceRange && matchesPropertyType && matchesGuestFavorite && matchesCategory &&
-//                matchesAmenity;
-//    });
-//    return stream.collect(Collectors.toList());
-//}
-
-    public List<PropertySearchResponse> unifiedPropertySearch(
+    public Slice<PropertySearchResponse> unifiedPropertySearch(
             LocalDate checkInDate, LocalDate checkOutDate,
             String place, Integer adult, Integer children, Integer infants, Integer pets,
             Integer price_min, Integer price_max, Integer min_bedrooms, Integer min_beds, Integer min_bathrooms,
-            Boolean guest_favorite, Integer property_type, Integer category, List<Integer> amenity) {
+            Boolean guest_favorite, Integer property_type, Integer category, List<Integer> amenity, Pageable pageable) {
 
         // 매개변수 기본값 설정
         adult = adult == null ? 0 : adult;
@@ -409,7 +261,6 @@ public class PropertyService {
 
         List<Property> properties;
 
-        // 날짜 기반 필터링
         if (checkInDate != null && checkOutDate != null) {
             List<LocalDate> days = new ArrayList<>();
             for (LocalDate date = checkInDate; date.isBefore(checkOutDate.plusDays(1)); date = date.plusDays(1)) {
@@ -420,8 +271,8 @@ public class PropertyService {
             properties = propertyRepository.findAll();
         }
 
-        // 스트림을 사용하여 필터링 적용
-        return properties.stream()
+
+        List<PropertySearchResponse> filteredProperties = properties.stream()
                 .filter(property -> {
                     // 장소 기반 필터링
                     if (place != null && !place.isEmpty()) {
@@ -481,9 +332,98 @@ public class PropertyService {
                             .build();
                 })
                 .collect(Collectors.toList());
+
+        // Pageable을 이용하여 현재 페이지의 데이터 슬라이스 계산
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), filteredProperties.size());
+        List<PropertySearchResponse> slicedData = filteredProperties.subList(start, end);
+
+        // 다음 페이지가 있는지 확인
+        boolean hasNext = end < filteredProperties.size();
+
+        // Slice 객체 생성 및 반환
+        return new SliceImpl<>(slicedData, pageable, hasNext);
     }
 
-}
+//        // 날짜 기반 필터링
+//        if (checkInDate != null && checkOutDate != null) {
+//            List<LocalDate> days = new ArrayList<>();
+//            for (LocalDate date = checkInDate; date.isBefore(checkOutDate.plusDays(1)); date = date.plusDays(1)) {
+//                days.add(date);
+//            }
+//            properties = propertyRepository.getAvailableProperties(days);
+//        } else {
+//            properties = propertyRepository.findAll();
+//        }
+//
+//        // 스트림을 사용하여 필터링 적용
+//        return properties.stream()
+//                .filter(property -> {
+//                    // 장소 기반 필터링
+//                    if (place != null && !place.isEmpty()) {
+//                        Address address = property.getAddress();
+//                        if (!(address.getCity().contains(place) || address.getState().contains(place) ||
+//                                address.getCountry().contains(place) || address.getStreet().contains(place) ||
+//                                address.getDetails().contains(place))) {
+//                            return false;
+//                        }
+//                    }
+//
+//                    PropertyDetail detail = property.getPropertyDetail();
+//                    boolean matchesPeople = detail.getMaxPeople() >= (finalAdult + finalChildren + finalInfants);
+//                    boolean matchesPets = finalPets <= 0 || detail.isPetAvailable();
+//                    boolean matchesBedrooms = detail.getBedroom() >= finalBedrooms;
+//                    boolean matchesBeds = detail.getBed() >= finalBeds;
+//                    boolean matchesBathrooms = detail.getBathroom() >= finalBathrooms;
+//                    boolean matchesPrice = property.getPrice() >= finalMinPrice && property.getPrice() <= finalMaxPrice;
+//                    boolean matchesGuestFavorite = (guest_favorite == null) || property.isGuestFavorite();
+//                    boolean matchesPropertyType = (property_type == null) || property.getPropertyType().ordinal() == property_type;
+//                    boolean matchesCategory = (category == null) || (property.getCategory() != null && property.getCategory().ordinal() == category);
+//
+//                    // 편의 시설 리스트 초기화 및 확인
+//                    List<Amenity> requiredAmenities = (amenity != null) ?
+//                            amenity.stream().map(Amenity::fromId).collect(Collectors.toList()) :
+//                            new ArrayList<>();
+//                    boolean matchesAmenity = (amenity == null) || property.getAmenities().containsAll(requiredAmenities);
+//
+//                    return matchesPeople && matchesPets && matchesBedrooms && matchesBeds && matchesBathrooms &&
+//                            matchesPrice && matchesPropertyType && matchesGuestFavorite && matchesCategory &&
+//                            matchesAmenity;
+//                })
+//                .map(property -> {
+//                    int reviewCount = property.getReviews().size();
+//                    double totalScore = property.getReviews().stream()
+//                            .map(Review::getScore)
+//                            .mapToDouble(Score::getTotalScore)
+//                            .average()
+//                            .orElse(0.0);
+//                    SearchUserDto searchUserDto = SearchUserDto.builder()
+//                            .userId(property.getPropertyId())
+//                            .picture(property.getHost().getPicture())
+//                            .explanation(property.getHost().getExplanation())
+//                            .userName(property.getHost().getName())
+//                            .build();
+//
+//                    return PropertySearchResponse.builder()
+//                            .propertyId(property.getPropertyId())
+//                            .photos(property.getPhotos())
+//                            .address(property.getAddress())
+//                            .searchUser(searchUserDto)
+//                            .price(property.getPrice())
+//                            .totalScore(totalScore)
+//                            .reviews(reviewCount)
+//                            .propertyExplanation(property.getPropertyExplanation())
+//                            .guestFavorite(property.isGuestFavorite())
+//                            .build();
+//                })
+//                .collect(Collectors.toList());
+
+
+    }
+
+
+
+
 
 
 
