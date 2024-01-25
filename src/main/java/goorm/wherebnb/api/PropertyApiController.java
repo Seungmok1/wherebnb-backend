@@ -8,6 +8,7 @@ import goorm.wherebnb.service.PropertyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class PropertyApiController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<PropertySearchResponse>> search(
+    public ResponseEntity<Slice<PropertySearchResponse>> search(
             @RequestParam(value = "place", required = false) String place,
             @RequestParam(value = "checkInDate", required = false) LocalDate checkInDate,
             @RequestParam(value = "checkOutDate", required = false) LocalDate checkOutDate,
@@ -43,11 +44,11 @@ public class PropertyApiController {
             @RequestParam(value = "guest_favorite", required = false) Boolean guest_favorite,
             @RequestParam(value = "property_type", required = false) Integer property_type,
             @RequestParam(value = "category", required = false) Integer category,
-            @RequestParam(value = "amenity", required = false) List<Integer> amenity) {
-            List<PropertySearchResponse> searchResponses = propertyService.unifiedPropertySearch(
+            @RequestParam(value = "amenity", required = false) List<Integer> amenity, Pageable pageable) {
+            Slice<PropertySearchResponse> searchResponses = propertyService.unifiedPropertySearch(
                 checkInDate, checkOutDate, place, adult, children, infants, pets,
                 price_min, price_max, min_bedrooms, min_beds, min_bathrooms,
-                guest_favorite, property_type, category, amenity
+                guest_favorite, property_type, category, amenity, pageable
             );
 
         return ResponseEntity.ok(searchResponses);
