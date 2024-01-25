@@ -102,6 +102,42 @@ public class InitDb {
                     .amenities(Arrays.asList(Amenity.TV, Amenity.DRYER))
                     .build();
 
+            Address mountainAddress = Address.builder()
+                    .country("Country")
+                    .state("Mountain State")
+                    .city("Mountain Town")
+                    .street("Mountain Road")
+                    .details("Cabin 101")
+                    .zipcode("123456")
+                    .latitude(20.0)
+                    .longitude(40.0)
+                    .build();
+
+            PropertyDetail mountainDetail = PropertyDetail.builder()
+                    .maxPeople(4)
+                    .selfCheckIn(true)
+                    .petAvailable(true)
+                    .smokeAvailable(false)
+                    .checkInTime(14)
+                    .checkOutTime(11)
+                    .bedroom(2)
+                    .bed(2)
+                    .bathroom(1)
+                    .build();
+
+            Property mountainCabin = Property.builder()
+                    .host(user)
+                    .propertyName("Mountain Cabin")
+                    .propertyType(PropertyType.주택)
+                    .propertyExplanation("A cozy cabin in the mountains.")
+                    .propertyDetail(mountainDetail)
+                    .address(mountainAddress)
+                    .price(150)
+                    .photos(Arrays.asList("cabin1.jpg", "cabin2.jpg"))
+                    .amenities(Arrays.asList(Amenity.WIFI, Amenity.WORK_ONLY_SPACE))
+                    .build();
+
+
             Address propertyAddress2 = Address.builder()
                     .country("대한민국")
                     .state("서울특별시")
@@ -194,7 +230,7 @@ public class InitDb {
                     .price(8000)
                     .category(Category.cabin)
                     .photos(Arrays.asList("studio1.jpg", "studio2.jpg"))
-                    .amenities(Arrays.asList(Amenity.KITCHEN, Amenity.WASHER))
+                    .amenities(Arrays.asList(Amenity.KITCHEN, Amenity.WASHER, Amenity.WIFI))
                     .build();
 
 
@@ -210,7 +246,7 @@ public class InitDb {
                     .category(Category.container)
 
                     .photos(Arrays.asList("photo1.jpg", "photo2.jpg"))
-                    .amenities(Arrays.asList(Amenity.TV))
+                    .amenities(Arrays.asList(Amenity.TV, Amenity.WIFI))
                     .build();
 
             Address cottageAddress = Address.builder()
@@ -248,6 +284,42 @@ public class InitDb {
                     .photos(Arrays.asList("cottage1.jpg", "cottage2.jpg"))
                     .amenities(Arrays.asList(Amenity.IRON, Amenity.HEATING_SYSTEM))
                     .build();
+
+            Address cityAddress = Address.builder()
+                    .country("Country")
+                    .state("City State")
+                    .city("Metropolis")
+                    .street("Downtown Avenue")
+                    .details("Apt 505")
+                    .zipcode("567890")
+                    .latitude(25.0)
+                    .longitude(35.0)
+                    .build();
+
+            PropertyDetail cityDetail = PropertyDetail.builder()
+                    .maxPeople(2)
+                    .selfCheckIn(true)
+                    .petAvailable(false)
+                    .smokeAvailable(true)
+                    .checkInTime(16)
+                    .checkOutTime(12)
+                    .bedroom(1)
+                    .bed(1)
+                    .bathroom(1)
+                    .build();
+
+            Property cityApartment = Property.builder()
+                    .host(user)
+                    .propertyName("City Apartment")
+                    .propertyType(PropertyType.아파트)
+                    .propertyExplanation("A modern apartment in the heart of the city.")
+                    .propertyDetail(cityDetail)
+                    .address(cityAddress)
+                    .price(100)
+                    .photos(Arrays.asList("apartment1.jpg", "apartment2.jpg"))
+                    .amenities(Arrays.asList(Amenity.WIFI, Amenity.HEATING_SYSTEM))
+                    .build();
+
 
 
             Review review1 = Review.builder()
@@ -369,6 +441,8 @@ public class InitDb {
             em.persist(beachVilla);
             em.persist(downtownStudio);
             em.persist(countryCottage);
+            em.persist(mountainCabin);
+            em.persist(cityApartment);
             em.persist(review1);
             em.persist(review2);
             em.persist(review3);

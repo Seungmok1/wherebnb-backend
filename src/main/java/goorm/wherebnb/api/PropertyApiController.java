@@ -1,5 +1,6 @@
 package goorm.wherebnb.api;
 
+import goorm.wherebnb.domain.dto.response.PagedResponse;
 import goorm.wherebnb.domain.dto.response.PropertyResponse;
 import goorm.wherebnb.domain.dto.response.PropertySearchResponse;
 import goorm.wherebnb.repository.PropertyRepository;
@@ -42,12 +43,10 @@ public class PropertyApiController {
             @RequestParam(value = "guest_favorite", required = false) Boolean guest_favorite,
             @RequestParam(value = "property_type", required = false) Integer property_type,
             @RequestParam(value = "category", required = false) Integer category,
-            @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber, // 요청된 페이지 번호
-            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) { // 요청된 페이지 크기) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            @RequestParam(value = "amenity", required = false) List<Integer> amenity) {
         List<PropertySearchResponse> responses = propertyService.propertySearch(checkInDate, checkOutDate);
-        List<PropertySearchResponse> responsesStep2 = propertyService.propertySearch2(responses, place, adult, children, infants, pets, price_min, price_max, min_bedrooms, min_beds, min_bathrooms, guest_favorite, property_type, category, pageable).getContent();
-        return ResponseEntity.ok(responsesStep2);
+        List<PropertySearchResponse> searchResponses = propertyService.propertySearch2(responses, place, adult, children, infants, pets, price_min, price_max, min_bedrooms, min_beds, min_bathrooms, guest_favorite, property_type, category, amenity);
+        return ResponseEntity.ok(searchResponses);
     }
 
 
